@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Users, User, CheckCircle, Music, X } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Users, User, CheckCircle, Music, X } from 'lucide-react';
 
 export default function GroupDateFinder() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -15,6 +15,7 @@ export default function GroupDateFinder() {
   const [showUserForm, setShowUserForm] = useState(true);
   const [view, setView] = useState('calendar'); // 'calendar' or 'results'
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showMusicFestivals, setShowMusicFestivals] = useState(true);
 
   // Load data from localStorage and URL on component mount
   useEffect(() => {
@@ -550,33 +551,36 @@ export default function GroupDateFinder() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen p-2 sm:p-4 bg-gray-50">
+    <div className="flex flex-col min-h-screen pt-0 px-2 sm:px-4 pb-2 sm:pb-4 bg-gray-50">
       {showUserForm && <UserForm />}
       {showResetConfirm && <ResetConfirmDialog />}
       
-      <div className="mb-4 sm:mb-8">
-        {/* Mobile header layout */}
-        <div className="text-center mb-4">
-          <h1 className="text-xl sm:text-3xl font-bold text-blue-600 flex items-center justify-center">
-            <Calendar className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" /> See Ya There
-          </h1>
-          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Select the dates you are attending an event (or busy with something else/unavailable)</p>
-          {currentUserName && (
-            <p className="text-xs sm:text-sm text-blue-600 mt-1">Welcome, {currentUserName}!</p>
-          )}
+      <div className="mb-0">
+        {/* Logo header */}
+        <div className="flex justify-center pt-0 pb-1">
+          <img 
+            src="/logo.png" 
+            alt="See Ya There Logo" 
+            className="h-44 sm:h-56 w-auto object-contain"
+          />
         </div>
+        {currentUserName && (
+          <div className="text-center mb-4">
+            <p className="text-xs sm:text-sm text-[#033F63]">Welcome, {currentUserName}!</p>
+          </div>
+        )}
         
         {/* Mobile-first action buttons */}
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-4">
           <div className="flex flex-1 gap-2">
             <button 
-              className={`flex-1 sm:flex-none px-3 py-2 text-sm rounded-md flex items-center justify-center ${view === 'calendar' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              className={`flex-1 sm:flex-none px-3 py-2 text-sm rounded-md flex items-center justify-center ${view === 'calendar' ? 'bg-[#033F63] text-white' : 'bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885]'}`}
               onClick={() => setView('calendar')}
             >
               <Calendar className="mr-1 h-4 w-4" /> Calendar
             </button>
             <button 
-              className={`flex-1 sm:flex-none px-3 py-2 text-sm rounded-md flex items-center justify-center ${view === 'results' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              className={`flex-1 sm:flex-none px-3 py-2 text-sm rounded-md flex items-center justify-center ${view === 'results' ? 'bg-[#033F63] text-white' : 'bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885]'}`}
               onClick={() => setView('results')}
             >
               <CheckCircle className="mr-1 h-4 w-4" /> Results
@@ -586,7 +590,7 @@ export default function GroupDateFinder() {
           {users.length > 0 && (
             <button
               onClick={copyShareableURL}
-              className="px-3 py-2 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center justify-center"
+              className="px-3 py-2 text-sm bg-[#28666E] text-white rounded-md hover:bg-[#7C9885] flex items-center justify-center"
             >
               <Users className="mr-1 h-4 w-4" /> Share
             </button>
@@ -603,13 +607,13 @@ export default function GroupDateFinder() {
               <div className="flex gap-1">
                 <button
                   onClick={() => setShowUserForm(true)}
-                  className="px-2 py-1 text-xs bg-gray-500 text-white rounded-md hover:bg-gray-600 flex items-center"
+                  className="px-2 py-1 text-xs bg-[#B5B682] text-white rounded-md hover:bg-[#7C9885] flex items-center"
                 >
                   <User className="mr-1 h-3 w-3" /> Switch
                 </button>
                 <button
                   onClick={() => setShowResetConfirm(true)}
-                  className="px-2 py-1 text-xs bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center"
+                  className="px-2 py-1 text-xs bg-[#28666E] text-white rounded-md hover:bg-[#033F63] flex items-center"
                 >
                   <X className="mr-1 h-3 w-3" /> Reset
                 </button>
@@ -621,7 +625,7 @@ export default function GroupDateFinder() {
                   key={user.id}
                   className={`
                     px-2 py-1 text-xs rounded-md flex items-center
-                    ${user.name === currentUserName ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'}
+                    ${user.name === currentUserName ? 'bg-[#033F63] text-white' : 'bg-[#FEDC97] text-[#033F63]'}
                   `}
                 >
                   {user.name}
@@ -637,19 +641,13 @@ export default function GroupDateFinder() {
         <>
           <div className="mb-4 p-4 bg-white rounded-lg shadow">
             <div className="flex justify-between items-center mb-4">
-              <button 
-                onClick={prevMonth}
-                className="p-2 rounded-full hover:bg-gray-200"
-              >
+                            <button                 onClick={prevMonth}                className="p-2 rounded-full hover:bg-[#FEDC97]"              >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <h2 className="text-xl font-semibold">
                 {getMonthName(currentMonth)} {currentMonth.getFullYear()}
               </h2>
-              <button 
-                onClick={nextMonth}
-                className="p-2 rounded-full hover:bg-gray-200"
-              >
+                            <button                 onClick={nextMonth}                className="p-2 rounded-full hover:bg-[#FEDC97]"              >
                 <ChevronRight className="h-5 w-5" />
               </button>
             </div>
@@ -673,15 +671,13 @@ export default function GroupDateFinder() {
                   }
                   className={`
                     h-10 sm:h-12 flex flex-col items-center justify-center rounded-lg cursor-pointer relative text-xs sm:text-sm
-                    ${!day.day ? 'text-gray-300' : 'hover:bg-gray-100'}
-                    ${day.isAvailable ? 'bg-blue-100 text-blue-800 font-medium' : ''}
-                    ${day.festivals && day.festivals.length > 0 ? 'border-2 border-dashed border-gray-300' : ''}
-                    ${day.isToday ? 'ring-2 ring-orange-400 bg-orange-50 font-bold text-orange-800' : ''}
+                                        ${!day.day ? 'text-[#B5B682]' : 'hover:bg-[#FEDC97]'}                    ${day.isAvailable ? 'bg-[#7C9885] text-[#033F63] font-medium' : ''}
+                                          ${day.festivals && day.festivals.length > 0 ? 'border-2 border-dashed border-[#28666E]' : ''}                      ${day.isToday ? 'ring-2 ring-[#FEDC97] bg-[#FEDC97] font-bold text-[#033F63]' : ''}
                   `}
                 >
                   {day.day}
                   {day.isToday && (
-                    <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-orange-400 rounded-full"></div>
+                    <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-[#28666E] rounded-full"></div>
                   )}
                   {day.festivals && day.festivals.length > 0 && (
                     <div className="absolute bottom-1 flex space-x-1">
@@ -703,34 +699,47 @@ export default function GroupDateFinder() {
           
           {/* Legend for festivals - mobile optimized */}
           <div className="mb-4 p-3 bg-white rounded-lg shadow">
-            <h3 className="font-medium mb-3 flex items-center text-sm sm:text-base">
-              <Music className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-blue-500" /> Music Festivals
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-              {festivals.map(festival => (
-                <div 
-                  key={festival.id}
-                  className={`px-2 sm:px-3 py-2 rounded-md ${festival.color} cursor-pointer hover:opacity-80 transition-opacity`}
-                  onClick={() => {
-                    const festivalDate = new Date(festival.startDate);
-                    setCurrentMonth(new Date(festivalDate.getFullYear(), festivalDate.getMonth(), 1));
-                  }}
-                >
-                  <div className="font-medium text-xs sm:text-sm">{festival.name}</div>
-                  <div className="text-xs text-gray-600 mt-1">
-                    {new Date(festival.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - 
-                    {new Date(festival.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                  </div>
-                </div>
-              ))}
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-medium flex items-center text-sm sm:text-base">
+                <Music className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#033F63]" /> Music Festivals
+              </h3>
+              <button
+                onClick={() => setShowMusicFestivals(!showMusicFestivals)}
+                                  className="p-1 rounded-md hover:bg-[#FEDC97] transition-colors"
+                title={showMusicFestivals ? 'Hide festivals' : 'Show festivals'}
+              >
+                {showMusicFestivals ? (
+                                      <ChevronUp className="h-4 w-4 text-[#28666E]" />                  ) : (                    <ChevronDown className="h-4 w-4 text-[#28666E]" />
+                )}
+              </button>
             </div>
+            {showMusicFestivals && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {festivals.map(festival => (
+                  <div 
+                    key={festival.id}
+                    className={`px-2 sm:px-3 py-2 rounded-md ${festival.color} cursor-pointer hover:opacity-80 transition-opacity`}
+                    onClick={() => {
+                      const festivalDate = new Date(festival.startDate);
+                      setCurrentMonth(new Date(festivalDate.getFullYear(), festivalDate.getMonth(), 1));
+                    }}
+                  >
+                    <div className="font-medium text-xs sm:text-sm">{festival.name}</div>
+                    <div className="text-xs text-gray-600 mt-1">
+                      {new Date(festival.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - 
+                      {new Date(festival.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
         </>
       ) : (
         <div className="p-4 bg-white rounded-lg shadow">
           <h3 className="font-medium mb-4 flex items-center text-sm sm:text-base">
-            <CheckCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-green-500" /> Best Date Options
+            <CheckCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#7C9885]" /> Best Date Options
           </h3>
           
           {getBestDates().length === 0 ? (
@@ -746,12 +755,12 @@ export default function GroupDateFinder() {
                 if (festivalMeetups.length > 0) {
                   return (
                     <div className="mb-6">
-                      <h4 className="font-medium text-purple-600 mb-3 flex items-center text-sm sm:text-base">
+                                              <h4 className="font-medium text-[#28666E] mb-3 flex items-center text-sm sm:text-base">
                         <Music className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Festival Meetups
                       </h4>
                       <div className="space-y-3">
                         {festivalMeetups.map((dateInfo, index) => (
-                          <div key={index} className="p-3 border border-purple-200 rounded-lg bg-purple-50">
+                                                      <div key={index} className="p-3 border border-[#28666E] rounded-lg bg-[#FEDC97]">
                             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                               <div className="flex-1">
                                 <div className="font-medium text-sm sm:text-base">{formatDateForDisplay(dateInfo.date)}</div>
@@ -759,8 +768,7 @@ export default function GroupDateFinder() {
                                   {dateInfo.count} {dateInfo.count === 1 ? 'person' : 'people'} available
                                 </div>
                                 <div className="mt-1 flex items-center">
-                                  <Music className="h-3 w-3 mr-1 text-purple-500" />
-                                  <span className="text-xs text-purple-600 font-medium">
+                                                                    <Music className="h-3 w-3 mr-1 text-[#28666E]" />                                  <span className="text-xs text-[#033F63] font-medium">
                                     {getEventsForDate(dateInfo.date).map(f => f.name).join(', ')}
                                   </span>
                                 </div>
@@ -772,7 +780,7 @@ export default function GroupDateFinder() {
                                     <div 
                                       key={user.id}
                                       className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs ${
-                                        isAvailable ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                        isAvailable ? 'bg-[#7C9885] text-white' : 'bg-[#28666E] text-white'
                                       }`}
                                       title={`${user.name} is ${isAvailable ? 'available' : 'not available'}`}
                                     >
@@ -793,7 +801,7 @@ export default function GroupDateFinder() {
               
               {/* All available dates section */}
               <div>
-                <h4 className="font-medium text-blue-600 mb-3 flex items-center text-sm sm:text-base">
+                <h4 className="font-medium text-[#033F63] mb-3 flex items-center text-sm sm:text-base">
                   <CheckCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> All Available Dates
                 </h4>
                 <div className="space-y-3">
@@ -807,8 +815,7 @@ export default function GroupDateFinder() {
                           </div>
                           {isDateWithinFestival(dateInfo.date) && (
                             <div className="mt-1 flex items-center">
-                              <Music className="h-3 w-3 mr-1 text-purple-500" />
-                              <span className="text-xs text-purple-600">
+                                                            <Music className="h-3 w-3 mr-1 text-[#28666E]" />                              <span className="text-xs text-[#033F63]">
                                 {getEventsForDate(dateInfo.date).map(f => f.name).join(', ')}
                               </span>
                             </div>
