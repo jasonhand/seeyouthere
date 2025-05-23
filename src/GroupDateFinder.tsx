@@ -560,7 +560,7 @@ export default function GroupDateFinder() {
           <h1 className="text-xl sm:text-3xl font-bold text-blue-600 flex items-center justify-center">
             <Calendar className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" /> See Ya There
           </h1>
-          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Find the best dates for your group meetup</p>
+          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Select the dates you are attending an event (or busy with something else/unavailable)</p>
           {currentUserName && (
             <p className="text-xs sm:text-sm text-blue-600 mt-1">Welcome, {currentUserName}!</p>
           )}
