@@ -14,6 +14,7 @@ export default function GroupDateFinder() {
   const [currentUserName, setCurrentUserName] = useState('');
   const [showUserForm, setShowUserForm] = useState(true);
   const [view, setView] = useState('calendar'); // 'calendar' or 'results'
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   // Load data from localStorage and URL on component mount
   useEffect(() => {
@@ -112,6 +113,17 @@ export default function GroupDateFinder() {
       prompt('Copy this URL to share:', generateShareableURL());
     }
   };
+
+  // Reset all data and start fresh
+  const handleStartFresh = () => {
+    setUsers([]);
+    setActiveUser(null);
+    setCurrentUserName('');
+    setShowUserForm(true);
+    setShowResetConfirm(false);
+    localStorage.removeItem('seeYouThere_users');
+    localStorage.removeItem('seeYouThere_currentUser');
+  };
   
   // Music festivals and multi-date events
   const festivals = [
@@ -127,16 +139,26 @@ export default function GroupDateFinder() {
     },
     {
       id: 4,
-      name: "Telluride",
+      name: "Town Park Pre-TBF",
+      startDate: "2025-06-14",
+      endDate: "2025-06-18",
+      dayOfWeekStart: "Saturday",
+      location: "Telluride, CO",
+      description: "Pre-festival gathering at Town Park before the main Telluride Bluegrass Festival.",
+      color: "bg-sky-200"
+    },
+    {
+      id: 5,
+      name: "Telluride Bluegrass Festival",
       startDate: "2025-06-19",
       endDate: "2025-06-22",
       dayOfWeekStart: "Thursday",
-      location: "Telluride, CO, USA",
+      location: "Telluride, CO",
       description: "Nestled in the rugged San Juan Mountains of Southwestern Colorado, the Telluride Bluegrass Festival is not only an iconic representation of all kinds of bluegrass music, but a destination for music lovers from all walks of life.",
       color: "bg-indigo-200"
     },
     {
-      id: 5,
+      id: 6,
       name: "Rail on the River",
       startDate: "2025-06-26",
       endDate: "2025-06-29",
@@ -146,27 +168,37 @@ export default function GroupDateFinder() {
       color: "bg-pink-200"
     },
     {
-      id: 6,
+      id: 7,
       name: "High Mountain Hay Fever",
       startDate: "2025-07-10",
       endDate: "2025-07-13",
       dayOfWeekStart: "Thursday",
-      location: "Westcliffe, CO 81252, USA",
+      location: "Westcliffe, CO",
       description: "Great Music, Great Place, Great Cause",
       color: "bg-red-200"
     },
     {
-      id: 7,
+      id: 8,
       name: "BoogieOnTheHill",
       startDate: "2025-07-18",
       endDate: "2025-07-20",
       dayOfWeekStart: "Friday",
-      location: "The Hill",
+      location: "Lyons, CO",
       description: "BoogieOnTheHill is a small and intimate camping gathering held on 35 private acres outside of Lyons, CO this July 18th & 19th. We offer a lot of fun for an affordable price.",
       color: "bg-orange-200"
     },
     {
-      id: 8,
+      id: 9,
+      name: "Rockygrass Academy",
+      startDate: "2025-07-20",
+      endDate: "2025-07-24",
+      dayOfWeekStart: "Sunday",
+      location: "Planetbluegrass Lyons Colorado",
+      description: "RockyGrass Academy is an intensive bluegrass music camp offering workshops and instruction.",
+      color: "bg-violet-200"
+    },
+    {
+      id: 10,
       name: "Rockygrass",
       startDate: "2025-07-25",
       endDate: "2025-07-27",
@@ -176,16 +208,16 @@ export default function GroupDateFinder() {
       color: "bg-purple-200"
     },
     {
-      id: 9,
+      id: 11,
       name: "Rhythms on the Rio",
       startDate: "2025-07-31",
       endDate: "2025-08-03",
       dayOfWeekStart: "Thursday",
-      location: "12510 CO-112, Del Norte, CO 81132, USA",
+      location: "Del Norte, CO ",
       color: "bg-teal-200"
     },
     {
-      id: 10,
+      id: 12,
       name: "Rapidgrass",
       startDate: "2025-08-15",
       endDate: "2025-08-16",
@@ -194,7 +226,7 @@ export default function GroupDateFinder() {
       color: "bg-cyan-200"
     },
     {
-      id: 11,
+      id: 13,
       name: "SnowyGrass",
       startDate: "2025-08-21",
       endDate: "2025-08-24",
@@ -204,7 +236,7 @@ export default function GroupDateFinder() {
       color: "bg-blue-100"
     },
     {
-      id: 12,
+      id: 14,
       name: "McAwesome Ranch",
       startDate: "2025-08-23",
       endDate: "2025-08-23",
@@ -215,7 +247,7 @@ export default function GroupDateFinder() {
       color: "bg-lime-200"
     },
     {
-      id: 13,
+      id: 15,
       name: "WanderFest",
       startDate: "2025-09-11",
       endDate: "2025-09-13",
@@ -225,7 +257,7 @@ export default function GroupDateFinder() {
       color: "bg-fuchsia-200"
     },
     {
-      id: 14,
+      id: 16,
       name: "Pickin' In The Rockies",
       startDate: "2025-09-14",
       endDate: "2025-09-14",
@@ -236,7 +268,7 @@ export default function GroupDateFinder() {
       color: "bg-rose-200"
     },
     {
-      id: 15,
+      id: 17,
       name: "Buffalo",
       startDate: "2025-10-03",
       startTime: "12:00 pm",
@@ -401,6 +433,17 @@ export default function GroupDateFinder() {
     return unmarkedDays;
   };
 
+  // Get weekend days (Saturday/Sunday) where people are available
+  const getAvailableWeekends = () => {
+    const availableDates = getBestDates();
+    const weekendDates = availableDates.filter(dateInfo => {
+      const date = new Date(dateInfo.date);
+      const dayOfWeek = date.getDay();
+      return dayOfWeek === 0 || dayOfWeek === 6; // 0 = Sunday, 6 = Saturday
+    });
+    return weekendDates;
+  };
+
   // Format date for display
   const formatDateForDisplay = (dateStr: string | number | Date) => {
     const date = new Date(dateStr);
@@ -480,9 +523,36 @@ export default function GroupDateFinder() {
     );
   };
 
+  // Reset confirmation dialog
+  const ResetConfirmDialog = () => (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+        <h3 className="text-lg font-bold mb-4 text-center">Start Fresh Calendar?</h3>
+        <p className="text-gray-600 mb-6 text-center">
+          This will remove all users and their selected dates. This action cannot be undone.
+        </p>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowResetConfirm(false)}
+            className="flex-1 px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleStartFresh}
+            className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+          >
+            Start Fresh
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col min-h-screen p-2 sm:p-4 bg-gray-50">
       {showUserForm && <UserForm />}
+      {showResetConfirm && <ResetConfirmDialog />}
       
       <div className="mb-4 sm:mb-8">
         {/* Mobile header layout */}
@@ -530,12 +600,20 @@ export default function GroupDateFinder() {
               <h4 className="text-xs font-medium flex items-center text-gray-600">
                 <Users className="mr-1 h-3 w-3" /> Users ({users.length})
               </h4>
-              <button
-                onClick={() => setShowUserForm(true)}
-                className="px-2 py-1 text-xs bg-gray-500 text-white rounded-md hover:bg-gray-600 flex items-center"
-              >
-                <User className="mr-1 h-3 w-3" /> Switch
-              </button>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setShowUserForm(true)}
+                  className="px-2 py-1 text-xs bg-gray-500 text-white rounded-md hover:bg-gray-600 flex items-center"
+                >
+                  <User className="mr-1 h-3 w-3" /> Switch
+                </button>
+                <button
+                  onClick={() => setShowResetConfirm(true)}
+                  className="px-2 py-1 text-xs bg-red-500 text-white rounded-md hover:bg-red-600 flex items-center"
+                >
+                  <X className="mr-1 h-3 w-3" /> Reset
+                </button>
+              </div>
             </div>
             <div className="flex flex-wrap gap-1">
               {users.map(user => (
@@ -589,6 +667,10 @@ export default function GroupDateFinder() {
                 <div 
                   key={index}
                   onClick={() => toggleDate(day.date)}
+                  title={day.festivals && day.festivals.length > 0 ? 
+                    day.festivals.map(f => `${f.name}${f.location ? ` - ${f.location}` : ''}`).join('\n') : 
+                    undefined
+                  }
                   className={`
                     h-10 sm:h-12 flex flex-col items-center justify-center rounded-lg cursor-pointer relative text-xs sm:text-sm
                     ${!day.day ? 'text-gray-300' : 'hover:bg-gray-100'}
@@ -607,7 +689,6 @@ export default function GroupDateFinder() {
                         <div 
                           key={fidx} 
                           className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${festival.color}`}
-                          title={festival.name}
                         ></div>
                       ))}
                       {day.festivals.length > 3 && (
@@ -757,40 +838,67 @@ export default function GroupDateFinder() {
               
               {/* Unmarked days section */}
               {users.length > 0 && (
-                <div className="mt-6 pt-6 border-t">
-                  <h4 className="font-medium text-gray-600 mb-3 flex items-center text-sm sm:text-base">
-                    <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Potential Meetup Days
-                  </h4>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="text-sm text-gray-700 mb-2">
-                      <strong>{getUnmarkedDays().length}</strong> days through end of {new Date().getFullYear()} have no availability marked yet.
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      These could be opportunities for meetups if people mark them as available.
-                    </div>
-                    {getUnmarkedDays().length > 0 && (
-                      <div className="mt-3">
-                        <details className="cursor-pointer">
-                          <summary className="text-xs text-blue-600 hover:text-blue-800">
-                            View unmarked dates ({getUnmarkedDays().length} total)
-                          </summary>
-                          <div className="mt-2 max-h-40 overflow-y-auto">
-                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 text-xs">
-                              {getUnmarkedDays().slice(0, 50).map((dateStr, index) => (
-                                <div key={index} className="px-2 py-1 bg-white rounded border text-gray-600">
-                                  {formatDateForDisplay(dateStr)}
-                                </div>
-                              ))}
-                              {getUnmarkedDays().length > 50 && (
-                                <div className="px-2 py-1 text-gray-400 italic">
-                                  +{getUnmarkedDays().length - 50} more...
-                                </div>
-                              )}
+                <div className="mt-6 pt-6 border-t space-y-4">
+                  {/* Available weekends */}
+                  {getAvailableWeekends().length > 0 && (
+                    <div>
+                      <h4 className="font-medium text-green-600 mb-3 flex items-center text-sm sm:text-base">
+                        <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Weekend Availability
+                      </h4>
+                      <div className="bg-green-50 p-4 rounded-lg">
+                        <div className="text-sm text-green-700 mb-3">
+                          <strong>{getAvailableWeekends().length}</strong> weekend days (Saturday/Sunday) where people are available
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {getAvailableWeekends().map((dateInfo, index) => (
+                            <div key={index} className="bg-white p-2 rounded border border-green-200">
+                              <div className="font-medium text-sm">{formatDateForDisplay(dateInfo.date)}</div>
+                              <div className="text-xs text-gray-600">
+                                {dateInfo.count} {dateInfo.count === 1 ? 'person' : 'people'} available
+                              </div>
                             </div>
-                          </div>
-                        </details>
+                          ))}
+                        </div>
                       </div>
-                    )}
+                    </div>
+                  )}
+                  
+                  {/* General potential meetup days */}
+                  <div>
+                    <h4 className="font-medium text-gray-600 mb-3 flex items-center text-sm sm:text-base">
+                      <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Potential Meetup Days
+                    </h4>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="text-sm text-gray-700 mb-2">
+                        <strong>{getUnmarkedDays().length}</strong> days through end of {new Date().getFullYear()} have no availability marked yet.
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        These could be opportunities for meetups if people mark them as available.
+                      </div>
+                      {getUnmarkedDays().length > 0 && (
+                        <div className="mt-3">
+                          <details className="cursor-pointer">
+                            <summary className="text-xs text-blue-600 hover:text-blue-800">
+                              View unmarked dates ({getUnmarkedDays().length} total)
+                            </summary>
+                            <div className="mt-2 max-h-40 overflow-y-auto">
+                              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 text-xs">
+                                {getUnmarkedDays().slice(0, 50).map((dateStr, index) => (
+                                  <div key={index} className="px-2 py-1 bg-white rounded border text-gray-600">
+                                    {formatDateForDisplay(dateStr)}
+                                  </div>
+                                ))}
+                                {getUnmarkedDays().length > 50 && (
+                                  <div className="px-2 py-1 text-gray-400 italic">
+                                    +{getUnmarkedDays().length - 50} more...
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </details>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
