@@ -483,7 +483,7 @@ export default function GroupDateFinder() {
           >
             <X className="h-5 w-5" />
           </button>
-          <h2 className="text-xl font-bold mb-4 text-center">Welcome to See You There</h2>
+          <h2 className="text-xl font-bold mb-4 text-center">Welcome to See Ya There</h2>
           <p className="text-gray-600 mb-4 text-center">Enter your name to get started</p>
           <form onSubmit={handleSubmit}>
             <input
@@ -558,7 +558,7 @@ export default function GroupDateFinder() {
         {/* Mobile header layout */}
         <div className="text-center mb-4">
           <h1 className="text-xl sm:text-3xl font-bold text-blue-600 flex items-center justify-center">
-            <Calendar className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" /> See You There
+            <Calendar className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" /> See Ya There
           </h1>
           <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Find the best dates for your group meetup</p>
           {currentUserName && (

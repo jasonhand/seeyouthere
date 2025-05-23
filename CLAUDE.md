@@ -1,7 +1,7 @@
-# See You There Project Information
+# See Ya There Project Information
 
 ## Project Overview
-See You There is a React-based web application for group date planning. It helps users find the best dates for group meetups by allowing each user to select their availability and displaying the best options.
+See Ya There is a React-based web application for group date planning. It helps users find the best dates for group meetups by allowing each user to select their availability and displaying the best options.
 
 ## Key Features
 - Calendar view for date selection

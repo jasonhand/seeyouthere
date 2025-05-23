@@ -1,6 +1,6 @@
-# See You There 🎵
+# See Ya There 🎵
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/your-site-id/deploy-status)](https://app.netlify.com/sites/your-site-name/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/fff8112f-c279-4146-aec7-8cd47eb290ee/deploy-status)](https://app.netlify.com/sites/seeyathere/deploys)
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=flat&logo=react&logoColor=white)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-4.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.3.5-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
@@ -21,7 +21,7 @@
 
 ## 🚀 Live Demo
 
-Visit the live application: [See You There](https://your-netlify-site.netlify.app)
+Visit the live application: [See Ya There](https://your-netlify-site.netlify.app)
 
 ## 🛠️ Technology Stack
 
