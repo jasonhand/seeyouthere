@@ -5,7 +5,8 @@
       "Bash(chmod:*)",
       "Bash(npm run build:*)",
       "Bash(npm run netlify-build:*)",
-      "Bash(npm run typecheck:*)"
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": []
   }

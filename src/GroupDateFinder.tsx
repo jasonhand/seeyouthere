@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Users, User, CheckCircle, Music } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Users, User, CheckCircle, Music, X } from 'lucide-react';
 
 export default function GroupDateFinder() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -372,6 +372,35 @@ export default function GroupDateFinder() {
     return sortedDates;
   };
 
+  // Get all unmarked days through end of year
+  const getUnmarkedDays = () => {
+    if (users.length === 0) return [];
+    
+    const today = new Date();
+    const endOfYear = new Date(today.getFullYear(), 11, 31); // December 31
+    const unmarkedDays = [];
+    const markedDates = new Set();
+    
+    // Collect all marked dates from all users
+    users.forEach(user => {
+      Object.keys(user.dates).forEach(date => {
+        markedDates.add(date);
+      });
+    });
+    
+    // Iterate through each day from today to end of year
+    const currentDate = new Date(today);
+    while (currentDate <= endOfYear) {
+      const dateStr = formatDate(currentDate);
+      if (!markedDates.has(dateStr)) {
+        unmarkedDays.push(dateStr);
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    return unmarkedDays;
+  };
+
   // Format date for display
   const formatDateForDisplay = (dateStr: string | number | Date) => {
     const date = new Date(dateStr);
@@ -393,9 +422,24 @@ export default function GroupDateFinder() {
       }
     };
 
+    const handleBackdropClick = (e: React.MouseEvent) => {
+      if (e.target === e.currentTarget) {
+        setShowUserForm(false);
+      }
+    };
+
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        onClick={handleBackdropClick}
+      >
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4 relative">
+          <button
+            onClick={() => setShowUserForm(false)}
+            className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
+          >
+            <X className="h-5 w-5" />
+          </button>
           <h2 className="text-xl font-bold mb-4 text-center">Welcome to See You There</h2>
           <p className="text-gray-600 mb-4 text-center">Enter your name to get started</p>
           <form onSubmit={handleSubmit}>
@@ -437,13 +481,51 @@ export default function GroupDateFinder() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen p-4 bg-gray-50">
+    <div className="flex flex-col min-h-screen p-2 sm:p-4 bg-gray-50">
       {showUserForm && <UserForm />}
       
-      <div className="mb-8 relative">
-        {/* Users display in upper left */}
+      <div className="mb-4 sm:mb-8">
+        {/* Mobile header layout */}
+        <div className="text-center mb-4">
+          <h1 className="text-xl sm:text-3xl font-bold text-blue-600 flex items-center justify-center">
+            <Calendar className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" /> See You There
+          </h1>
+          <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Find the best dates for your group meetup</p>
+          {currentUserName && (
+            <p className="text-xs sm:text-sm text-blue-600 mt-1">Welcome, {currentUserName}!</p>
+          )}
+        </div>
+        
+        {/* Mobile-first action buttons */}
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-4">
+          <div className="flex flex-1 gap-2">
+            <button 
+              className={`flex-1 sm:flex-none px-3 py-2 text-sm rounded-md flex items-center justify-center ${view === 'calendar' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              onClick={() => setView('calendar')}
+            >
+              <Calendar className="mr-1 h-4 w-4" /> Calendar
+            </button>
+            <button 
+              className={`flex-1 sm:flex-none px-3 py-2 text-sm rounded-md flex items-center justify-center ${view === 'results' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              onClick={() => setView('results')}
+            >
+              <CheckCircle className="mr-1 h-4 w-4" /> Results
+            </button>
+          </div>
+          
+          {users.length > 0 && (
+            <button
+              onClick={copyShareableURL}
+              className="px-3 py-2 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center justify-center"
+            >
+              <Users className="mr-1 h-4 w-4" /> Share
+            </button>
+          )}
+        </div>
+        
+        {/* Users display - mobile friendly */}
         {users.length > 0 && (
-          <div className="absolute top-0 left-0 bg-white p-3 rounded-lg shadow-sm border max-w-xs">
+          <div className="bg-white p-3 rounded-lg shadow-sm border mb-4">
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-xs font-medium flex items-center text-gray-600">
                 <Users className="mr-1 h-3 w-3" /> Users ({users.length})
@@ -471,43 +553,6 @@ export default function GroupDateFinder() {
             </div>
           </div>
         )}
-        
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-blue-600 flex items-center justify-center">
-            <Calendar className="mr-3" /> See You There
-          </h1>
-          <p className="text-gray-600 mt-2">Find the best dates for your group meetup</p>
-          {currentUserName && (
-            <p className="text-sm text-blue-600 mt-1">Welcome, {currentUserName}!</p>
-          )}
-        </div>
-        
-        {/* Action buttons in upper right */}
-        <div className="absolute top-0 right-0 flex flex-col space-y-2">
-          <div className="flex space-x-2">
-            <button 
-              className={`px-3 py-1 text-sm rounded-md flex items-center ${view === 'calendar' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-              onClick={() => setView('calendar')}
-            >
-              <Calendar className="mr-1 h-4 w-4" /> Calendar
-            </button>
-            <button 
-              className={`px-3 py-1 text-sm rounded-md flex items-center ${view === 'results' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
-              onClick={() => setView('results')}
-            >
-              <CheckCircle className="mr-1 h-4 w-4" /> Results
-            </button>
-          </div>
-          
-          {users.length > 0 && (
-            <button
-              onClick={copyShareableURL}
-              className="px-3 py-1 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center"
-            >
-              <Users className="mr-1 h-4 w-4" /> Share
-            </button>
-          )}
-        </div>
       </div>
 
       {view === 'calendar' ? (
@@ -533,7 +578,7 @@ export default function GroupDateFinder() {
 
             <div className="grid grid-cols-7 gap-1 mb-2 text-center">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} className="font-medium text-gray-500">
+                <div key={day} className="font-medium text-gray-500 text-xs sm:text-sm">
                   {day}
                 </div>
               ))}
@@ -545,7 +590,7 @@ export default function GroupDateFinder() {
                   key={index}
                   onClick={() => toggleDate(day.date)}
                   className={`
-                    h-12 flex flex-col items-center justify-center rounded-lg cursor-pointer relative
+                    h-10 sm:h-12 flex flex-col items-center justify-center rounded-lg cursor-pointer relative text-xs sm:text-sm
                     ${!day.day ? 'text-gray-300' : 'hover:bg-gray-100'}
                     ${day.isAvailable ? 'bg-blue-100 text-blue-800 font-medium' : ''}
                     ${day.festivals && day.festivals.length > 0 ? 'border-2 border-dashed border-gray-300' : ''}
@@ -554,17 +599,20 @@ export default function GroupDateFinder() {
                 >
                   {day.day}
                   {day.isToday && (
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-400 rounded-full"></div>
+                    <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-orange-400 rounded-full"></div>
                   )}
                   {day.festivals && day.festivals.length > 0 && (
                     <div className="absolute bottom-1 flex space-x-1">
-                      {day.festivals.map((festival, fidx) => (
+                      {day.festivals.slice(0, 3).map((festival, fidx) => (
                         <div 
                           key={fidx} 
-                          className={`w-2 h-2 rounded-full ${festival.color}`}
+                          className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${festival.color}`}
                           title={festival.name}
                         ></div>
                       ))}
+                      {day.festivals.length > 3 && (
+                        <div className="text-[8px] text-gray-600">+{day.festivals.length - 3}</div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -572,22 +620,26 @@ export default function GroupDateFinder() {
             </div>
           </div>
           
-          {/* Legend for festivals */}
-          <div className="mb-4 p-2 bg-white rounded-lg shadow">
-            <h3 className="font-medium mb-2 flex items-center">
-              <Music className="mr-2 h-5 w-5 text-blue-500" /> Music Festivals
+          {/* Legend for festivals - mobile optimized */}
+          <div className="mb-4 p-3 bg-white rounded-lg shadow">
+            <h3 className="font-medium mb-3 flex items-center text-sm sm:text-base">
+              <Music className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-blue-500" /> Music Festivals
             </h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {festivals.map(festival => (
                 <div 
                   key={festival.id}
-                  className={`px-3 py-1 rounded-md flex items-center ${festival.color}`}
+                  className={`px-2 sm:px-3 py-2 rounded-md ${festival.color} cursor-pointer hover:opacity-80 transition-opacity`}
+                  onClick={() => {
+                    const festivalDate = new Date(festival.startDate);
+                    setCurrentMonth(new Date(festivalDate.getFullYear(), festivalDate.getMonth(), 1));
+                  }}
                 >
-                  <span>{festival.name}</span>
-                  <span className="ml-2 text-xs text-gray-600">
+                  <div className="font-medium text-xs sm:text-sm">{festival.name}</div>
+                  <div className="text-xs text-gray-600 mt-1">
                     {new Date(festival.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - 
                     {new Date(festival.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                  </span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -596,50 +648,154 @@ export default function GroupDateFinder() {
         </>
       ) : (
         <div className="p-4 bg-white rounded-lg shadow">
-          <h3 className="font-medium mb-4 flex items-center">
-            <CheckCircle className="mr-2 h-5 w-5 text-green-500" /> Best Date Options
+          <h3 className="font-medium mb-4 flex items-center text-sm sm:text-base">
+            <CheckCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-green-500" /> Best Date Options
           </h3>
           
-          <div className="space-y-3">
-            {getBestDates().length === 0 ? (
-              <p className="text-gray-500 text-center my-8">No dates have been selected yet. Go to Calendar View to select available dates.</p>
-            ) : (
-              getBestDates().map((dateInfo, index) => (
-                <div key={index} className="p-3 border rounded-lg flex justify-between items-center">
-                  <div>
-                    <div className="font-medium">{formatDateForDisplay(dateInfo.date)}</div>
-                    <div className="text-sm text-gray-500">
-                      {dateInfo.count} {dateInfo.count === 1 ? 'person' : 'people'} available
+          {getBestDates().length === 0 ? (
+            <p className="text-gray-500 text-center my-8 text-sm sm:text-base">No dates have been selected yet. Go to Calendar View to select available dates.</p>
+          ) : (
+            <div className="space-y-4">
+              {/* Festival meetups section */}
+              {(() => {
+                const festivalMeetups = getBestDates().filter(dateInfo => 
+                  isDateWithinFestival(dateInfo.date) && dateInfo.count > 1
+                );
+                
+                if (festivalMeetups.length > 0) {
+                  return (
+                    <div className="mb-6">
+                      <h4 className="font-medium text-purple-600 mb-3 flex items-center text-sm sm:text-base">
+                        <Music className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Festival Meetups
+                      </h4>
+                      <div className="space-y-3">
+                        {festivalMeetups.map((dateInfo, index) => (
+                          <div key={index} className="p-3 border border-purple-200 rounded-lg bg-purple-50">
+                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                              <div className="flex-1">
+                                <div className="font-medium text-sm sm:text-base">{formatDateForDisplay(dateInfo.date)}</div>
+                                <div className="text-xs sm:text-sm text-gray-600">
+                                  {dateInfo.count} {dateInfo.count === 1 ? 'person' : 'people'} available
+                                </div>
+                                <div className="mt-1 flex items-center">
+                                  <Music className="h-3 w-3 mr-1 text-purple-500" />
+                                  <span className="text-xs text-purple-600 font-medium">
+                                    {getEventsForDate(dateInfo.date).map(f => f.name).join(', ')}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex flex-wrap gap-1">
+                                {users.map(user => {
+                                  const isAvailable = user.dates[dateInfo.date];
+                                  return (
+                                    <div 
+                                      key={user.id}
+                                      className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs ${
+                                        isAvailable ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                      }`}
+                                      title={`${user.name} is ${isAvailable ? 'available' : 'not available'}`}
+                                    >
+                                      {user.name.charAt(0)}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    {isDateWithinFestival(dateInfo.date) && (
-                      <div className="mt-1 flex items-center">
-                        <Music className="h-3 w-3 mr-1 text-purple-500" />
-                        <span className="text-xs text-purple-600">
-                          {getEventsForDate(dateInfo.date).map(f => f.name).join(', ')}
-                        </span>
+                  );
+                }
+                return null;
+              })()}
+              
+              {/* All available dates section */}
+              <div>
+                <h4 className="font-medium text-blue-600 mb-3 flex items-center text-sm sm:text-base">
+                  <CheckCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> All Available Dates
+                </h4>
+                <div className="space-y-3">
+                  {getBestDates().map((dateInfo, index) => (
+                    <div key={index} className="p-3 border rounded-lg">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                        <div className="flex-1">
+                          <div className="font-medium text-sm sm:text-base">{formatDateForDisplay(dateInfo.date)}</div>
+                          <div className="text-xs sm:text-sm text-gray-500">
+                            {dateInfo.count} {dateInfo.count === 1 ? 'person' : 'people'} available
+                          </div>
+                          {isDateWithinFestival(dateInfo.date) && (
+                            <div className="mt-1 flex items-center">
+                              <Music className="h-3 w-3 mr-1 text-purple-500" />
+                              <span className="text-xs text-purple-600">
+                                {getEventsForDate(dateInfo.date).map(f => f.name).join(', ')}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {users.map(user => {
+                            const isAvailable = user.dates[dateInfo.date];
+                            return (
+                              <div 
+                                key={user.id}
+                                className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs ${
+                                  isAvailable ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                }`}
+                                title={`${user.name} is ${isAvailable ? 'available' : 'not available'}`}
+                              >
+                                {user.name.charAt(0)}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Unmarked days section */}
+              {users.length > 0 && (
+                <div className="mt-6 pt-6 border-t">
+                  <h4 className="font-medium text-gray-600 mb-3 flex items-center text-sm sm:text-base">
+                    <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" /> Potential Meetup Days
+                  </h4>
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="text-sm text-gray-700 mb-2">
+                      <strong>{getUnmarkedDays().length}</strong> days through end of {new Date().getFullYear()} have no availability marked yet.
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      These could be opportunities for meetups if people mark them as available.
+                    </div>
+                    {getUnmarkedDays().length > 0 && (
+                      <div className="mt-3">
+                        <details className="cursor-pointer">
+                          <summary className="text-xs text-blue-600 hover:text-blue-800">
+                            View unmarked dates ({getUnmarkedDays().length} total)
+                          </summary>
+                          <div className="mt-2 max-h-40 overflow-y-auto">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 text-xs">
+                              {getUnmarkedDays().slice(0, 50).map((dateStr, index) => (
+                                <div key={index} className="px-2 py-1 bg-white rounded border text-gray-600">
+                                  {formatDateForDisplay(dateStr)}
+                                </div>
+                              ))}
+                              {getUnmarkedDays().length > 50 && (
+                                <div className="px-2 py-1 text-gray-400 italic">
+                                  +{getUnmarkedDays().length - 50} more...
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </details>
                       </div>
                     )}
                   </div>
-                  <div className="flex space-x-1">
-                    {users.map(user => {
-                      const isAvailable = user.dates[dateInfo.date];
-                      return (
-                        <div 
-                          key={user.id}
-                          className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                            isAvailable ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                          }`}
-                          title={`${user.name} is ${isAvailable ? 'available' : 'not available'}`}
-                        >
-                          {user.name.charAt(0)}
-                        </div>
-                      );
-                    })}
-                  </div>
                 </div>
-              ))
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
