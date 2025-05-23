@@ -1,0 +1,647 @@
+import { useState, useEffect } from 'react';
+import { Calendar, ChevronLeft, ChevronRight, Users, User, CheckCircle, Music } from 'lucide-react';
+
+export default function GroupDateFinder() {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  type User = {
+    id: number;
+    name: string;
+    dates: { [date: string]: boolean };
+  };
+
+  const [users, setUsers] = useState<User[]>([]);
+  const [activeUser, setActiveUser] = useState<number | null>(null);
+  const [currentUserName, setCurrentUserName] = useState('');
+  const [showUserForm, setShowUserForm] = useState(true);
+  const [view, setView] = useState('calendar'); // 'calendar' or 'results'
+
+  // Load data from localStorage and URL on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedData = urlParams.get('data');
+    
+    if (sharedData) {
+      try {
+        const parsedData = JSON.parse(decodeURIComponent(sharedData));
+        setUsers(parsedData.users || []);
+        // Don't set activeUser from shared data - let user select themselves
+      } catch (error) {
+        console.error('Error parsing shared data:', error);
+      }
+    } else {
+      // Load from localStorage if no shared data
+      const savedUsers = localStorage.getItem('seeYouThere_users');
+      if (savedUsers) {
+        try {
+          setUsers(JSON.parse(savedUsers));
+        } catch (error) {
+          console.error('Error loading saved users:', error);
+        }
+      }
+    }
+
+    // Check if user has a saved profile
+    const savedUserName = localStorage.getItem('seeYouThere_currentUser');
+    if (savedUserName) {
+      setCurrentUserName(savedUserName);
+      setShowUserForm(false);
+    }
+  }, []);
+
+  // Save users to localStorage whenever users change
+  useEffect(() => {
+    if (users.length > 0) {
+      localStorage.setItem('seeYouThere_users', JSON.stringify(users));
+    }
+  }, [users]);
+
+  // Update activeUser when currentUserName changes
+  useEffect(() => {
+    if (currentUserName && users.length > 0) {
+      const user = users.find(u => u.name === currentUserName);
+      if (user) {
+        setActiveUser(user.id);
+      }
+    }
+  }, [currentUserName, users]);
+
+  // Handle user profile creation/selection
+  const handleUserSubmit = (name: string) => {
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
+
+    // Check if user already exists
+    let existingUser = users.find(u => u.name === trimmedName);
+    
+    if (!existingUser) {
+      // Create new user
+      const newUser = {
+        id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
+        name: trimmedName,
+        dates: {}
+      };
+      const updatedUsers = [...users, newUser];
+      setUsers(updatedUsers);
+      existingUser = newUser;
+    }
+
+    setCurrentUserName(trimmedName);
+    setActiveUser(existingUser.id);
+    setShowUserForm(false);
+    
+    // Save current user to localStorage
+    localStorage.setItem('seeYouThere_currentUser', trimmedName);
+  };
+
+  // Generate shareable URL
+  const generateShareableURL = () => {
+    const data = { users };
+    const encodedData = encodeURIComponent(JSON.stringify(data));
+    const baseURL = window.location.origin + window.location.pathname;
+    return `${baseURL}?data=${encodedData}`;
+  };
+
+  // Copy URL to clipboard
+  const copyShareableURL = async () => {
+    try {
+      await navigator.clipboard.writeText(generateShareableURL());
+      alert('Shareable URL copied to clipboard!');
+    } catch (error) {
+      console.error('Failed to copy URL:', error);
+      // Fallback: show URL in prompt
+      prompt('Copy this URL to share:', generateShareableURL());
+    }
+  };
+  
+  // Music festivals and multi-date events
+  const festivals = [
+    {
+      id: 3,
+      name: "Goldengrass",
+      startDate: "2025-05-29",
+      endDate: "2025-06-01",
+      dayOfWeekStart: "Thursday",
+      location: "New Terrain Brewing Co",
+      description: "Four days of bluegrass music and craft beer.",
+      color: "bg-yellow-200"
+    },
+    {
+      id: 4,
+      name: "Telluride",
+      startDate: "2025-06-19",
+      endDate: "2025-06-22",
+      dayOfWeekStart: "Thursday",
+      location: "Telluride, CO, USA",
+      description: "Nestled in the rugged San Juan Mountains of Southwestern Colorado, the Telluride Bluegrass Festival is not only an iconic representation of all kinds of bluegrass music, but a destination for music lovers from all walks of life.",
+      color: "bg-indigo-200"
+    },
+    {
+      id: 5,
+      name: "Rail on the River",
+      startDate: "2025-06-26",
+      endDate: "2025-06-29",
+      dayOfWeekStart: "Thursday",
+      location: "Parrish Ranch",
+      website: "Tickets at railarts.org",
+      color: "bg-pink-200"
+    },
+    {
+      id: 6,
+      name: "High Mountain Hay Fever",
+      startDate: "2025-07-10",
+      endDate: "2025-07-13",
+      dayOfWeekStart: "Thursday",
+      location: "Westcliffe, CO 81252, USA",
+      description: "Great Music, Great Place, Great Cause",
+      color: "bg-red-200"
+    },
+    {
+      id: 7,
+      name: "BoogieOnTheHill",
+      startDate: "2025-07-18",
+      endDate: "2025-07-20",
+      dayOfWeekStart: "Friday",
+      location: "The Hill",
+      description: "BoogieOnTheHill is a small and intimate camping gathering held on 35 private acres outside of Lyons, CO this July 18th & 19th. We offer a lot of fun for an affordable price.",
+      color: "bg-orange-200"
+    },
+    {
+      id: 8,
+      name: "Rockygrass",
+      startDate: "2025-07-25",
+      endDate: "2025-07-27",
+      dayOfWeekStart: "Friday",
+      location: "Planetbluegrass Lyons Colorado",
+      description: "Located in Lyons, Colorado, RockyGrass is traditional bluegrass at its finest. Red rock cliffs and Cottonwoods peer down over the property as festivarians pick in the campground and along the St. Vrain River.",
+      color: "bg-purple-200"
+    },
+    {
+      id: 9,
+      name: "Rhythms on the Rio",
+      startDate: "2025-07-31",
+      endDate: "2025-08-03",
+      dayOfWeekStart: "Thursday",
+      location: "12510 CO-112, Del Norte, CO 81132, USA",
+      color: "bg-teal-200"
+    },
+    {
+      id: 10,
+      name: "Rapidgrass",
+      startDate: "2025-08-15",
+      endDate: "2025-08-16",
+      dayOfWeekStart: "Friday",
+      location: "Rapidgrass Bluegrass Festival",
+      color: "bg-cyan-200"
+    },
+    {
+      id: 11,
+      name: "SnowyGrass",
+      startDate: "2025-08-21",
+      endDate: "2025-08-24",
+      dayOfWeekStart: "Thursday",
+      location: "Stanley Park",
+      description: "10th Annual SnowyGrass. Panoramic Views, Camping and Jamming Festival. Dog-friendly",
+      color: "bg-blue-100"
+    },
+    {
+      id: 12,
+      name: "McAwesome Ranch",
+      startDate: "2025-08-23",
+      endDate: "2025-08-23",
+      dayOfWeekStart: "Saturday",
+      time: "All Day",
+      location: "McAwesome Ranch",
+      description: "As we approach the 6th annual installment of The Colorado Bluegrass Festival, it is clear that this event is unlike any other night of music in Colorado.",
+      color: "bg-lime-200"
+    },
+    {
+      id: 13,
+      name: "WanderFest",
+      startDate: "2025-09-11",
+      endDate: "2025-09-13",
+      dayOfWeekStart: "Thursday",
+      location: "New Terrain Brewing Co",
+      description: "Dates have been set for WanderFest 2025! We will have 3 days of live music from Thursday, 9/11 - Saturday, 9/13. For more information visit our website.",
+      color: "bg-fuchsia-200"
+    },
+    {
+      id: 14,
+      name: "Pickin' In The Rockies",
+      startDate: "2025-09-14",
+      endDate: "2025-09-14",
+      dayOfWeekStart: "Sunday",
+      time: "All Day",
+      location: "Absolute Prestige Ranch",
+      description: "Pickin' In The Rockies is a festival in western Colorado that is providing a whoopin', hollerin', toe tappin', hand clappin' good time for the entire family.",
+      color: "bg-rose-200"
+    },
+    {
+      id: 15,
+      name: "Buffalo",
+      startDate: "2025-10-03",
+      startTime: "12:00 pm",
+      endDate: "2025-10-05",
+      endTime: "9:00 pm",
+      dayOfWeekStart: "Friday",
+      location: "Buffalo Grass Bluegrass Festival",
+      description: "Save the date and join us for the second annual Buffalo Bluegrass & Picking Festival! Featuring live music from some great local artists, daily workshops, and a band scramble.",
+      color: "bg-amber-200"
+    }
+  ];
+
+  // Format date to YYYY-MM-DD
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Get events for a specific date
+  const getEventsForDate = (dateStr: string | number | Date) => {
+    if (!dateStr) return [];
+    
+    return festivals.filter(festival => {
+      const startDate = new Date(festival.startDate);
+      const endDate = new Date(festival.endDate);
+      const currentDate = new Date(dateStr);
+      
+      return currentDate >= startDate && currentDate <= endDate;
+    });
+  };
+  
+  // Check if a date is within a festival period
+  const isDateWithinFestival = (dateStr: string) => {
+    if (!dateStr) return false;
+    return getEventsForDate(dateStr).length > 0;
+  };
+
+  // Check if a date is today
+  const isToday = (dateStr: string) => {
+    const today = new Date();
+    const todayStr = formatDate(today);
+    return dateStr === todayStr;
+  };
+
+  // Generate calendar days for current month
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    
+    let days = [];
+    // Add empty slots for days before the first of the month
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      days.push({ day: null, date: null });
+    }
+    
+    // Add days of the month
+    for (let i = 1; i <= daysInMonth; i++) {
+      const currentDate = new Date(year, month, i);
+      const dateStr = formatDate(currentDate);
+      const festivalsOnDay = getEventsForDate(dateStr);
+      
+      const currentUser = users.find(u => u.id === activeUser);
+      days.push({ 
+        day: i, 
+        date: dateStr,
+        isAvailable: currentUser?.dates[dateStr] === true,
+        festivals: festivalsOnDay,
+        isToday: isToday(dateStr)
+      });
+    }
+    
+    return days;
+  };
+
+  // Get month name
+  const getMonthName = (date: Date) => {
+    return date.toLocaleString('default', { month: 'long' });
+  };
+
+  // Handle date selection
+  const toggleDate = (dateStr: string | number | null) => {
+    if (!dateStr) return;
+    
+    if (activeUser === null) return;
+    
+    const newUsers = users.map(user => {
+      if (user.id === activeUser) {
+        return {
+          ...user,
+          dates: {
+            ...user.dates,
+            [dateStr]: !user.dates[dateStr]
+          }
+        };
+      }
+      return user;
+    });
+    
+    setUsers(newUsers);
+  };
+
+  // Navigation functions
+  const prevMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
+  };
+
+  // Calculate best dates for the group
+  const getBestDates = () => {
+    // Create a map of all dates and count how many users are available
+    const dateAvailability: { [date: string]: number } = {};
+    
+    users.forEach(user => {
+      Object.entries(user.dates).forEach(([date, isAvailable]) => {
+        if (isAvailable) {
+          dateAvailability[date] = (dateAvailability[date] || 0) + 1;
+        }
+      });
+    });
+    
+    // Convert to an array and sort by availability count (descending)
+    const sortedDates = Object.entries(dateAvailability)
+      .map(([date, count]) => ({ date, count: count as number }))
+      .sort((a, b) => (b.count as number) - (a.count as number));
+    
+    return sortedDates;
+  };
+
+  // Format date for display
+  const formatDateForDisplay = (dateStr: string | number | Date) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'short', 
+      month: 'short', 
+      day: 'numeric'
+    });
+  };
+
+  // User form component
+  const UserForm = () => {
+    const [name, setName] = useState('');
+
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (name.trim()) {
+        handleUserSubmit(name);
+      }
+    };
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+          <h2 className="text-xl font-bold mb-4 text-center">Welcome to See You There</h2>
+          <p className="text-gray-600 mb-4 text-center">Enter your name to get started</p>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your name"
+              className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              autoFocus
+            />
+            <button
+              type="submit"
+              disabled={!name.trim()}
+              className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              Continue
+            </button>
+          </form>
+          {users.length > 0 && (
+            <div className="mt-4">
+              <p className="text-sm text-gray-600 mb-2">Or select existing user:</p>
+              <div className="flex flex-wrap gap-2">
+                {users.map(user => (
+                  <button
+                    key={user.id}
+                    onClick={() => handleUserSubmit(user.name)}
+                    className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                  >
+                    {user.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen p-4 bg-gray-50">
+      {showUserForm && <UserForm />}
+      
+      <div className="mb-8 relative">
+        {/* Users display in upper left */}
+        {users.length > 0 && (
+          <div className="absolute top-0 left-0 bg-white p-3 rounded-lg shadow-sm border max-w-xs">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-xs font-medium flex items-center text-gray-600">
+                <Users className="mr-1 h-3 w-3" /> Users ({users.length})
+              </h4>
+              <button
+                onClick={() => setShowUserForm(true)}
+                className="px-2 py-1 text-xs bg-gray-500 text-white rounded-md hover:bg-gray-600 flex items-center"
+              >
+                <User className="mr-1 h-3 w-3" /> Switch
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {users.map(user => (
+                <span
+                  key={user.id}
+                  className={`
+                    px-2 py-1 text-xs rounded-md flex items-center
+                    ${user.name === currentUserName ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'}
+                  `}
+                >
+                  {user.name}
+                  {user.name === currentUserName && <span className="ml-1">•</span>}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-blue-600 flex items-center justify-center">
+            <Calendar className="mr-3" /> See You There
+          </h1>
+          <p className="text-gray-600 mt-2">Find the best dates for your group meetup</p>
+          {currentUserName && (
+            <p className="text-sm text-blue-600 mt-1">Welcome, {currentUserName}!</p>
+          )}
+        </div>
+        
+        {/* Action buttons in upper right */}
+        <div className="absolute top-0 right-0 flex flex-col space-y-2">
+          <div className="flex space-x-2">
+            <button 
+              className={`px-3 py-1 text-sm rounded-md flex items-center ${view === 'calendar' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              onClick={() => setView('calendar')}
+            >
+              <Calendar className="mr-1 h-4 w-4" /> Calendar
+            </button>
+            <button 
+              className={`px-3 py-1 text-sm rounded-md flex items-center ${view === 'results' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+              onClick={() => setView('results')}
+            >
+              <CheckCircle className="mr-1 h-4 w-4" /> Results
+            </button>
+          </div>
+          
+          {users.length > 0 && (
+            <button
+              onClick={copyShareableURL}
+              className="px-3 py-1 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center"
+            >
+              <Users className="mr-1 h-4 w-4" /> Share
+            </button>
+          )}
+        </div>
+      </div>
+
+      {view === 'calendar' ? (
+        <>
+          <div className="mb-4 p-4 bg-white rounded-lg shadow">
+            <div className="flex justify-between items-center mb-4">
+              <button 
+                onClick={prevMonth}
+                className="p-2 rounded-full hover:bg-gray-200"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <h2 className="text-xl font-semibold">
+                {getMonthName(currentMonth)} {currentMonth.getFullYear()}
+              </h2>
+              <button 
+                onClick={nextMonth}
+                className="p-2 rounded-full hover:bg-gray-200"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-7 gap-1 mb-2 text-center">
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                <div key={day} className="font-medium text-gray-500">
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-7 gap-1">
+              {getDaysInMonth(currentMonth).map((day, index) => (
+                <div 
+                  key={index}
+                  onClick={() => toggleDate(day.date)}
+                  className={`
+                    h-12 flex flex-col items-center justify-center rounded-lg cursor-pointer relative
+                    ${!day.day ? 'text-gray-300' : 'hover:bg-gray-100'}
+                    ${day.isAvailable ? 'bg-blue-100 text-blue-800 font-medium' : ''}
+                    ${day.festivals && day.festivals.length > 0 ? 'border-2 border-dashed border-gray-300' : ''}
+                    ${day.isToday ? 'ring-2 ring-orange-400 bg-orange-50 font-bold text-orange-800' : ''}
+                  `}
+                >
+                  {day.day}
+                  {day.isToday && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-400 rounded-full"></div>
+                  )}
+                  {day.festivals && day.festivals.length > 0 && (
+                    <div className="absolute bottom-1 flex space-x-1">
+                      {day.festivals.map((festival, fidx) => (
+                        <div 
+                          key={fidx} 
+                          className={`w-2 h-2 rounded-full ${festival.color}`}
+                          title={festival.name}
+                        ></div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Legend for festivals */}
+          <div className="mb-4 p-2 bg-white rounded-lg shadow">
+            <h3 className="font-medium mb-2 flex items-center">
+              <Music className="mr-2 h-5 w-5 text-blue-500" /> Music Festivals
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {festivals.map(festival => (
+                <div 
+                  key={festival.id}
+                  className={`px-3 py-1 rounded-md flex items-center ${festival.color}`}
+                >
+                  <span>{festival.name}</span>
+                  <span className="ml-2 text-xs text-gray-600">
+                    {new Date(festival.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - 
+                    {new Date(festival.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </>
+      ) : (
+        <div className="p-4 bg-white rounded-lg shadow">
+          <h3 className="font-medium mb-4 flex items-center">
+            <CheckCircle className="mr-2 h-5 w-5 text-green-500" /> Best Date Options
+          </h3>
+          
+          <div className="space-y-3">
+            {getBestDates().length === 0 ? (
+              <p className="text-gray-500 text-center my-8">No dates have been selected yet. Go to Calendar View to select available dates.</p>
+            ) : (
+              getBestDates().map((dateInfo, index) => (
+                <div key={index} className="p-3 border rounded-lg flex justify-between items-center">
+                  <div>
+                    <div className="font-medium">{formatDateForDisplay(dateInfo.date)}</div>
+                    <div className="text-sm text-gray-500">
+                      {dateInfo.count} {dateInfo.count === 1 ? 'person' : 'people'} available
+                    </div>
+                    {isDateWithinFestival(dateInfo.date) && (
+                      <div className="mt-1 flex items-center">
+                        <Music className="h-3 w-3 mr-1 text-purple-500" />
+                        <span className="text-xs text-purple-600">
+                          {getEventsForDate(dateInfo.date).map(f => f.name).join(', ')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex space-x-1">
+                    {users.map(user => {
+                      const isAvailable = user.dates[dateInfo.date];
+                      return (
+                        <div 
+                          key={user.id}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                            isAvailable ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                          }`}
+                          title={`${user.name} is ${isAvailable ? 'available' : 'not available'}`}
+                        >
+                          {user.name.charAt(0)}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

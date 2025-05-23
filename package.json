@@ -1,0 +1,27 @@
+{
+  "name": "see-you-there",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "netlify-build": "npm run build && cp _redirects dist/",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'No linting configured'"
+  },
+  "dependencies": {
+    "lucide-react": "^0.263.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.21",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^4.5.0",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.3.2",
+    "typescript": "^4.9.3",
+    "vite": "^6.3.5"
+  }
+}
