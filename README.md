@@ -21,7 +21,7 @@
 
 ## 🚀 Live Demo
 
-Visit the live application: [See Ya There](https://your-netlify-site.netlify.app)
+Visit the live application: [See Ya There](https://seeyathere.netlify.app)
 
 ## 🛠️ Technology Stack
 
@@ -148,5 +148,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <p align="center">
-  Made with ❤️ for better group planning
+  Made with ❤️ from j:hand (and Claude 4)
 </p>
