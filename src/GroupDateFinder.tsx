@@ -685,6 +685,53 @@ export default function GroupDateFinder() {
     return availableDays;
   };
 
+  // Get unavailable days within a specific number of days from today
+  const getUnavailableDaysWithinPeriod = (days: number) => {
+    if (users.length === 0) return [];
+    
+    const today = new Date();
+    const endDate = new Date(today);
+    endDate.setDate(today.getDate() + days);
+    
+    const unavailableDays = [];
+    
+    // Iterate through each day from today to end date
+    const currentDate = new Date(today);
+    while (currentDate <= endDate) {
+      const dateStr = formatDate(currentDate);
+      
+      // Check if ANY user is unavailable on this date
+      const isAnyoneUnavailable = users.some(user => user.dates[dateStr] === true);
+      
+      // Include if someone is unavailable
+      if (isAnyoneUnavailable) {
+        unavailableDays.push(dateStr);
+      }
+      
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    return unavailableDays;
+  };
+
+  // Get all unavailable days from all users (for total count)
+  const getAllUnavailableDays = () => {
+    if (users.length === 0) return [];
+    
+    const unavailableDates = new Set();
+    
+    // Collect all unavailable dates from all users
+    users.forEach(user => {
+      Object.entries(user.dates).forEach(([date, isUnavailable]) => {
+        if (isUnavailable === true) {
+          unavailableDates.add(date);
+        }
+      });
+    });
+    
+    return Array.from(unavailableDates);
+  };
+
   // Get festival meetups where people are actually attending
   const getFestivalMeetups = () => {
     if (users.length === 0) return [];
@@ -736,7 +783,13 @@ export default function GroupDateFinder() {
 
   // Format date for display
   const formatDateForDisplay = (dateStr: string | number | Date) => {
-    const date = new Date(dateStr);
+    let date;
+    if (typeof dateStr === 'string' && dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      // For YYYY-MM-DD strings, add time to avoid timezone issues
+      date = new Date(dateStr + 'T12:00:00');
+    } else {
+      date = new Date(dateStr);
+    }
     return date.toLocaleDateString('en-US', { 
       weekday: 'short', 
       month: 'short', 
@@ -1364,7 +1417,7 @@ export default function GroupDateFinder() {
                 <h3 className="font-medium mb-4 flex items-center text-sm sm:text-base">
                   <CheckCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#7C9885]" /> Availability Summary
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                   {/* 10 Days Summary */}
                   <div 
                     className="bg-green-50 p-4 rounded-lg border border-green-200 cursor-pointer hover:bg-green-100 transition-colors"
@@ -1418,6 +1471,19 @@ export default function GroupDateFinder() {
                       <div className="text-sm font-medium text-purple-700">Next 60 Days</div>
                       <div className="text-xs text-purple-600 mt-1">
                         {getUnmarkedDaysWithinPeriod(60).length === 1 ? 'day' : 'days'} available
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Unavailable Days Summary */}
+                  <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                    <div className="text-center">
+                      <div className="text-2xl sm:text-3xl font-bold text-red-600 mb-1">
+                        {getAllUnavailableDays().length}
+                      </div>
+                      <div className="text-sm font-medium text-red-700">Total Unavailable</div>
+                      <div className="text-xs text-red-600 mt-1">
+                        {getAllUnavailableDays().length === 1 ? 'day' : 'days'} marked busy
                       </div>
                     </div>
                   </div>
