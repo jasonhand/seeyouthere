@@ -464,8 +464,8 @@ export default function GroupDateFinder() {
     if (!dateStr) return [];
     
     return festivals.filter(festival => {
-      const startDate = new Date(festival.startDate);
-      const endDate = new Date(festival.endDate);
+      const startDate = new Date(festival.startDate + 'T12:00:00');
+      const endDate = new Date(festival.endDate + 'T12:00:00');
       const currentDate = new Date(dateStr);
       
       return currentDate >= startDate && currentDate <= endDate;
@@ -676,8 +676,8 @@ export default function GroupDateFinder() {
     const festivalMeetups = [];
     
     festivals.forEach(festival => {
-      const startDate = new Date(festival.startDate);
-      const endDate = new Date(festival.endDate);
+      const startDate = new Date(festival.startDate + 'T12:00:00');
+      const endDate = new Date(festival.endDate + 'T12:00:00');
       const currentDate = new Date(startDate);
       
       while (currentDate <= endDate) {
@@ -1141,14 +1141,14 @@ export default function GroupDateFinder() {
                   key={festival.id}
                   className={`px-2 sm:px-3 py-2 rounded-md ${festival.color} cursor-pointer hover:opacity-80 transition-opacity`}
                   onClick={() => {
-                    const festivalDate = new Date(festival.startDate);
+                    const festivalDate = new Date(festival.startDate + 'T12:00:00');
                     setCurrentMonth(new Date(festivalDate.getFullYear(), festivalDate.getMonth(), 1));
                   }}
                 >
                   <div className="font-medium text-xs sm:text-sm">{festival.name}</div>
                   <div className="text-xs text-gray-600 mt-1">
-                    {new Date(festival.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - 
-                    {new Date(festival.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    {new Date(festival.startDate + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - 
+                    {new Date(festival.endDate + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   </div>
                 </div>
               ))}
