@@ -264,6 +264,54 @@ export default function GroupDateFinder() {
     );
   };
 
+  // Get festivals the current user is attending
+  const getCurrentUserFestivals = () => {
+    if (!activeUser || !showMusicFestivals) return [];
+    
+    const userAttendance = festivalAttendance[activeUser] || {};
+    const attendingFestivals = [];
+    
+    // Go through each festival and check if user is attending any dates
+    festivals.forEach(festival => {
+      const startDate = new Date(festival.startDate + 'T12:00:00');
+      const endDate = new Date(festival.endDate + 'T12:00:00');
+      const currentDate = new Date(startDate);
+      
+      let isAttending = false;
+      const attendingDates = [];
+      const otherAttendees = new Set();
+      
+      // Check each day of the festival
+      while (currentDate <= endDate) {
+        const dateStr = formatDate(currentDate);
+        
+        if (userAttendance[dateStr] === 'attending') {
+          isAttending = true;
+          attendingDates.push(dateStr);
+          
+          // Find other users attending on this date
+          users.forEach(user => {
+            if (user.id !== activeUser && festivalAttendance[user.id]?.[dateStr] === 'attending') {
+              otherAttendees.add(user.name);
+            }
+          });
+        }
+        
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      
+      if (isAttending) {
+        attendingFestivals.push({
+          festival,
+          attendingDates,
+          otherAttendees: Array.from(otherAttendees)
+        });
+      }
+    });
+    
+    return attendingFestivals;
+  };
+
   // Reset all data and start fresh
   const handleStartFresh = () => {
     setUsers([]);
@@ -319,7 +367,7 @@ export default function GroupDateFinder() {
     {
       id: 5,
       name: "Telluride Bluegrass Festival",
-      startDate: "2025-06-19",
+      startDate: "2025-06-18",
       endDate: "2025-06-22",
       dayOfWeekStart: "Thursday",
       location: "Telluride, CO",
@@ -369,7 +417,7 @@ export default function GroupDateFinder() {
     {
       id: 10,
       name: "Rockygrass",
-      startDate: "2025-07-25",
+      startDate: "2025-07-24",
       endDate: "2025-07-27",
       dayOfWeekStart: "Friday",
       location: "Planetbluegrass Lyons Colorado",
@@ -1176,6 +1224,20 @@ export default function GroupDateFinder() {
             </button>
           </div>
         </div>
+
+        {/* Music Festival Toggle - Below navigation buttons */}
+        <div className="flex justify-center mb-4">
+          <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
+            <input
+              type="checkbox"
+              checked={showMusicFestivals}
+              onChange={(e) => setShowMusicFestivals(e.target.checked)}
+              className="w-3 h-3 text-[#28666E] bg-gray-100 border-gray-300 rounded focus:ring-[#28666E] focus:ring-1"
+            />
+            <Music className="h-3 w-3 text-[#28666E]" />
+            <span className="text-xs font-medium text-gray-600">Music Festivals</span>
+          </label>
+        </div>
       </div>
 
 
@@ -1193,20 +1255,6 @@ export default function GroupDateFinder() {
                             <button                 onClick={nextMonth}                className="p-2 rounded-full hover:bg-[#FEDC97]"              >
                 <ChevronRight className="h-5 w-5" />
               </button>
-            </div>
-
-            {/* Music Festival Toggle */}
-            <div className="flex items-center justify-center mb-4 p-2 bg-gray-50 rounded-lg">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={showMusicFestivals}
-                  onChange={(e) => setShowMusicFestivals(e.target.checked)}
-                  className="w-4 h-4 text-[#28666E] bg-gray-100 border-gray-300 rounded focus:ring-[#28666E] focus:ring-2"
-                />
-                <Music className="h-4 w-4 text-[#28666E]" />
-                <span className="text-sm font-medium text-gray-700">Show Music Festivals</span>
-              </label>
             </div>
 
             <div className="grid grid-cols-7 gap-1 mb-2 text-center">
@@ -1716,6 +1764,139 @@ export default function GroupDateFinder() {
                         </div>
                       ))}
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Festival Section - Plans and Tickets */}
+              {showMusicFestivals && getCurrentUserFestivals().length > 0 && (
+                <div className="mt-8">
+                  <div className="text-center mb-8">
+                    <h2 className="text-2xl font-bold text-[#033F63] mb-2">🎵 Your Festival Experience</h2>
+                    <p className="text-gray-600">Your upcoming music festival plans and tickets</p>
+                  </div>
+
+                  {/* Festival Plans - Detailed View */}
+                  <div className="p-4 bg-white rounded-lg shadow border-2 border-[#28666E] mb-8">
+                    <h3 className="font-medium mb-4 flex items-center text-sm sm:text-base">
+                      <Music className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#28666E]" /> Your Festival Plans
+                    </h3>
+                    <div className="bg-indigo-50 p-4 rounded-lg">
+                      <div className="text-sm text-indigo-700 mb-3">
+                        🎵 Music festivals you're attending
+                      </div>
+                      <div className="space-y-3">
+                        {getCurrentUserFestivals().map((item, index) => (
+                          <div key={index} className="p-3 border border-indigo-200 rounded-lg bg-white">
+                            <div className="flex flex-col gap-2">
+                              <div className="flex justify-between items-start">
+                                <div className="flex-1">
+                                  <div className="font-medium text-sm text-indigo-900">{item.festival.name}</div>
+                                  <div className="text-xs text-indigo-600">
+                                    📍 {item.festival.location} • {formatDateForDisplay(item.festival.startDate)} - {formatDateForDisplay(item.festival.endDate)}
+                                  </div>
+                                  {item.festival.description && (
+                                    <div className="text-xs text-gray-600 mt-1">{item.festival.description}</div>
+                                  )}
+                                </div>
+                              </div>
+                              {item.otherAttendees.length > 0 && (
+                                <div className="flex items-center gap-2 mt-2 pt-2 border-t border-indigo-100">
+                                  <span className="text-xs text-indigo-600 font-medium">Also attending:</span>
+                                  <div className="flex gap-1">
+                                    {item.otherAttendees.map((name, nameIndex) => (
+                                      <span 
+                                        key={nameIndex}
+                                        className="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full"
+                                      >
+                                        {name}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Festival Tickets - Visual Concert Tickets */}
+                  <div>
+                    <h3 className="font-medium mb-6 text-center text-lg text-[#033F63]">
+                      🎫 Your Festival Tickets
+                    </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {getCurrentUserFestivals().map((item, index) => (
+                      <div 
+                        key={index}
+                        className="festival-ticket relative"
+                        style={{
+                          perspective: '1000px',
+                        }}
+                      >
+                        <div className="ticket-inner relative bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-800 rounded-lg p-6 transform transition-all duration-500 hover:rotateY-12 hover:rotateX-5 hover:scale-105 shadow-xl hover:shadow-2xl">
+                          {/* Foil overlay for reflection effect */}
+                          <div className="foil-overlay absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-lg pointer-events-none"></div>
+                          
+                          {/* Ticket perforations */}
+                          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full -ml-2"></div>
+                          <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-4 h-4 bg-gray-50 rounded-full -mr-2"></div>
+                          
+                          {/* Ticket content */}
+                          <div className="relative z-10 text-white">
+                            <div className="border-b border-white/30 pb-3 mb-3">
+                              <div className="text-xs opacity-75 mb-1">CONCERT TICKET</div>
+                              <div className="font-bold text-lg mb-1">{item.festival.name}</div>
+                              <div className="text-sm opacity-90">📍 {item.festival.location}</div>
+                            </div>
+                            
+                            <div className="space-y-2 text-sm">
+                              <div className="flex justify-between">
+                                <span className="opacity-75">DATES:</span>
+                                <span className="font-medium">
+                                  {formatDateForDisplay(item.festival.startDate)} - {formatDateForDisplay(item.festival.endDate)}
+                                </span>
+                              </div>
+                              
+                              {item.otherAttendees.length > 0 && (
+                                <div className="pt-2 border-t border-white/30">
+                                  <div className="text-xs opacity-75 mb-2">FRIENDS ALSO ATTENDING:</div>
+                                  <div className="flex flex-wrap gap-1">
+                                    {item.otherAttendees.map((name, nameIndex) => (
+                                      <span 
+                                        key={nameIndex}
+                                        className="px-2 py-1 text-xs bg-white/20 rounded-full backdrop-blur-sm"
+                                      >
+                                        {name}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                            
+                            {/* Barcode-style decoration */}
+                            <div className="mt-4 pt-3 border-t border-white/30">
+                              <div className="flex space-x-1 justify-center">
+                                {[...Array(12)].map((_, i) => (
+                                  <div 
+                                    key={i} 
+                                    className="bg-white/60 rounded-full" 
+                                    style={{ 
+                                      width: '2px', 
+                                      height: Math.random() * 20 + 10 + 'px' 
+                                    }}
+                                  ></div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                   </div>
                 </div>
               )}

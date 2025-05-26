@@ -1,3 +1,83 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Festival Ticket 3D Effects */
+.festival-ticket {
+  perspective: 1000px;
+}
+
+.ticket-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.festival-ticket:hover .ticket-inner {
+  transform: rotateY(12deg) rotateX(5deg) scale(1.05);
+}
+
+/* Foil reflection effect */
+.foil-overlay {
+  background: linear-gradient(
+    135deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 40%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 60%,
+    transparent 70%
+  );
+  background-size: 200% 200%;
+  animation: foil-shimmer 3s ease-in-out infinite;
+}
+
+.festival-ticket:hover .foil-overlay {
+  opacity: 1;
+  animation: foil-sweep 0.8s ease-out;
+}
+
+@keyframes foil-shimmer {
+  0%, 100% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+}
+
+@keyframes foil-sweep {
+  0% { 
+    background-position: -200% -200%;
+    opacity: 0;
+  }
+  50% { 
+    opacity: 1;
+  }
+  100% { 
+    background-position: 200% 200%;
+    opacity: 0;
+  }
+}
+
+/* Additional ticket styling */
+.festival-ticket:hover {
+  z-index: 10;
+}
+
+.ticket-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.festival-ticket:hover .ticket-inner::before {
+  opacity: 1;
+}
