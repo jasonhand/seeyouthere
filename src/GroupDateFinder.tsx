@@ -510,7 +510,7 @@ export default function GroupDateFinder() {
         day: i, 
         date: dateStr,
         isUnavailable: currentUser?.dates[dateStr] === true,
-        festivals: festivalsOnDay,
+        festivals: showMusicFestivals ? festivalsOnDay : [],
         holidays: holidaysOnDay,
         isToday: isToday(dateStr),
         isPreferred: getCurrentUserPreferences().has(dateStr)
@@ -535,7 +535,7 @@ export default function GroupDateFinder() {
     const isCurrentlyMarked = currentUser?.dates[dateStr as string] === true;
     
     // If marking a date as unavailable and it's a festival date, prompt for clarification
-    if (!isCurrentlyMarked && isDateWithinFestival(dateStr as string)) {
+    if (!isCurrentlyMarked && showMusicFestivals && isDateWithinFestival(dateStr as string)) {
       setPendingFestivalDate(dateStr as string);
       setShowFestivalPrompt(true);
       return;
@@ -1041,6 +1041,20 @@ export default function GroupDateFinder() {
               </button>
             </div>
 
+            {/* Music Festival Toggle */}
+            <div className="flex items-center justify-center mb-4 p-2 bg-gray-50 rounded-lg">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showMusicFestivals}
+                  onChange={(e) => setShowMusicFestivals(e.target.checked)}
+                  className="w-4 h-4 text-[#28666E] bg-gray-100 border-gray-300 rounded focus:ring-[#28666E] focus:ring-2"
+                />
+                <Music className="h-4 w-4 text-[#28666E]" />
+                <span className="text-sm font-medium text-gray-700">Show Music Festivals</span>
+              </label>
+            </div>
+
             <div className="grid grid-cols-7 gap-1 mb-2 text-center">
               {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                 <div key={day} className="font-medium text-gray-500 text-xs sm:text-sm">
@@ -1173,7 +1187,7 @@ export default function GroupDateFinder() {
                             <div className="flex-1">
                               <div className="font-medium text-sm">{formatDateForDisplay(preference.date)}</div>
                               <div className="text-xs text-yellow-600">
-                                {isDateWithinFestival(preference.date) ? '🎵 Festival day' : 'Meetup day'}
+                                {showMusicFestivals && isDateWithinFestival(preference.date) ? '🎵 Festival day' : 'Meetup day'}
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
@@ -1224,7 +1238,7 @@ export default function GroupDateFinder() {
                           <div>
                             <div className="font-medium text-sm">{formatDateForDisplay(dateStr)}</div>
                             <div className="text-xs text-blue-600">
-                              {isDateWithinFestival(dateStr) ? '🎵 Festival day' : 'Meetup day'}
+                              {showMusicFestivals && isDateWithinFestival(dateStr) ? '🎵 Festival day' : 'Meetup day'}
                             </div>
                             <div className="text-xs text-gray-500">
                               {getPreferenceCount(dateStr)} {getPreferenceCount(dateStr) === 1 ? 'person likes' : 'people like'} this
@@ -1309,7 +1323,7 @@ export default function GroupDateFinder() {
                 </div>
 
                 {/* Festival Summary */}
-                {getFestivalMeetups().length > 0 && (
+                {showMusicFestivals && getFestivalMeetups().length > 0 && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
                       <div className="text-center">
@@ -1354,7 +1368,7 @@ export default function GroupDateFinder() {
                             <div className="flex-1">
                               <div className="font-medium text-sm">{formatDateForDisplay(dateStr)}</div>
                               <div className="text-xs text-green-600">All {users.length} available</div>
-                              {isDateWithinFestival(dateStr) && (
+                              {showMusicFestivals && isDateWithinFestival(dateStr) && (
                                 <div className="mt-1 flex items-center">
                                   <Music className="h-3 w-3 mr-1 text-[#28666E]" />
                                   <span className="text-xs text-[#033F63] truncate">
@@ -1402,7 +1416,7 @@ export default function GroupDateFinder() {
                             <div className="flex-1">
                               <div className="font-medium text-sm">{formatDateForDisplay(dateStr)}</div>
                               <div className="text-xs text-blue-600">All {users.length} available</div>
-                              {isDateWithinFestival(dateStr) && (
+                              {showMusicFestivals && isDateWithinFestival(dateStr) && (
                                 <div className="mt-1 flex items-center">
                                   <Music className="h-3 w-3 mr-1 text-[#28666E]" />
                                   <span className="text-xs text-[#033F63] truncate">
@@ -1450,7 +1464,7 @@ export default function GroupDateFinder() {
                             <div className="flex-1">
                               <div className="font-medium text-sm">{formatDateForDisplay(dateStr)}</div>
                               <div className="text-xs text-purple-600">All {users.length} available</div>
-                              {isDateWithinFestival(dateStr) && (
+                              {showMusicFestivals && isDateWithinFestival(dateStr) && (
                                 <div className="mt-1 flex items-center">
                                   <Music className="h-3 w-3 mr-1 text-[#28666E]" />
                                   <span className="text-xs text-[#033F63] truncate">
@@ -1489,7 +1503,7 @@ export default function GroupDateFinder() {
               </div>
 
               {/* Festival Meetups */}
-              {getFestivalMeetups().length > 0 && (
+              {showMusicFestivals && getFestivalMeetups().length > 0 && (
                 <div className="p-4 bg-white rounded-lg shadow">
                   <h3 className="font-medium mb-4 flex items-center text-sm sm:text-base">
                     <Music className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#28666E]" /> Festival Meetup Opportunities
