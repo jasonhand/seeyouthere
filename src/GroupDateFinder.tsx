@@ -13,7 +13,7 @@ export default function GroupDateFinder() {
   const [activeUser, setActiveUser] = useState<number | null>(null);
   const [currentUserName, setCurrentUserName] = useState('');
   const [showUserForm, setShowUserForm] = useState(true);
-  const [view, setView] = useState('calendar'); // 'calendar' or 'results'
+  const [view, setView] = useState('calendar'); // 'calendar', 'results', or 'about'
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showMusicFestivals, setShowMusicFestivals] = useState(true);
   const [showControlPanel, setShowControlPanel] = useState(true);
@@ -959,6 +959,91 @@ export default function GroupDateFinder() {
     </div>
   );
 
+  // About page component
+  const AboutPage = () => (
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
+      <div className="text-center mb-8">
+        <img 
+          src="/logo.png" 
+          alt="See Ya There Logo" 
+          className="h-32 w-auto object-contain mx-auto mb-4"
+        />
+        <h1 className="text-3xl font-bold text-[#033F63] mb-2">See Ya There</h1>
+        <p className="text-lg text-gray-600">Group Date Planning Made Simple</p>
+      </div>
+      
+      <div className="space-y-6 text-gray-700">
+        <section>
+          <h2 className="text-xl font-semibold text-[#033F63] mb-3">What is this?</h2>
+          <p className="mb-4">
+            See Ya There is a collaborative calendar tool designed to help groups of friends find the best dates for meetups and events. 
+            Instead of endless group text conversations trying to coordinate schedules, everyone can simply mark their unavailable dates 
+            and instantly see when the group is free to get together.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-semibold text-[#033F63] mb-3">How it works</h2>
+          <ol className="list-decimal list-inside space-y-2">
+            <li>Create your user profile by entering your name</li>
+            <li>Mark dates when you are <strong>NOT available</strong> on the calendar</li>
+            <li>Star your preferred meetup dates for extra visibility</li>
+            <li>Share your calendar link with friends so they can add their availability</li>
+            <li>Check the Results page to see the best dates when everyone is free</li>
+          </ol>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-semibold text-[#033F63] mb-3">Music Festival Integration</h2>
+          <p className="mb-4">
+            See Ya There includes an overlay of popular music festivals throughout the year. When you mark a festival date as unavailable, 
+            the app will ask if you're attending the festival or just busy. This helps the group discover opportunities to meet up at festivals 
+            when multiple people are attending the same event.
+          </p>
+          <p className="text-sm text-gray-600">
+            You can toggle festival overlays on/off using the checkbox above the calendar.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-semibold text-[#033F63] mb-3">Features</h2>
+          <ul className="list-disc list-inside space-y-1">
+            <li>Multi-user collaborative scheduling</li>
+            <li>Preferred date marking and group voting</li>
+            <li>Music festival integration and meetup detection</li>
+            <li>Shareable calendar links</li>
+            <li>Results view with availability summaries</li>
+            <li>Mobile-friendly responsive design</li>
+            <li>Local storage - no account required</li>
+          </ul>
+        </section>
+
+        <section className="border-t pt-6 mt-8">
+          <div className="text-center">
+            <p className="text-lg font-medium text-[#033F63] mb-2">
+              Developed With Love ❤️
+            </p>
+            <p className="text-gray-600 text-lg">
+              by <span className="font-semibold text-[#28666E]">j:hand</span>
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              Making group planning a little easier, one calendar at a time.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <div className="mt-8 text-center">
+        <button
+          onClick={() => setView('calendar')}
+          className="px-6 py-3 bg-[#28666E] text-white rounded-lg hover:bg-[#033F63] font-medium"
+        >
+          Back to Calendar
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col min-h-screen pt-0 px-2 sm:px-4 pb-2 sm:pb-4 bg-gray-50">
       {showUserForm && <UserForm />}
@@ -1554,6 +1639,21 @@ export default function GroupDateFinder() {
               )}
             </>
           )}
+        </div>
+      )}
+
+      {/* About View */}
+      {view === 'about' && <AboutPage />}
+
+      {/* Footer - only show on main views */}
+      {(view === 'calendar' || view === 'results') && (
+        <div className="mt-8 text-center py-4 border-t border-gray-200">
+          <button
+            onClick={() => setView('about')}
+            className="text-sm text-gray-500 hover:text-[#28666E] underline"
+          >
+            What is this?
+          </button>
         </div>
       )}
     </div>

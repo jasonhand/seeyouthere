@@ -10,6 +10,8 @@
     "lint": "echo 'No linting configured'"
   },
   "dependencies": {
+    "@datadog/browser-rum": "^6.7.0",
+    "@datadog/browser-rum-react": "^6.7.0",
     "lucide-react": "^0.263.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
