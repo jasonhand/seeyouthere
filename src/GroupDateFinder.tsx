@@ -170,6 +170,13 @@ export default function GroupDateFinder() {
   const togglePreferredDate = (dateStr: string) => {
     if (activeUser === null) return;
     
+    // Check if user is unavailable on this date
+    const currentUser = users.find(u => u.id === activeUser);
+    const isUnavailable = currentUser?.dates[dateStr] === true;
+    
+    // Don't allow adding unavailable dates as preferred
+    if (isUnavailable) return;
+    
     setUserPreferences(prev => {
       const newPreferences = { ...prev };
       if (!newPreferences[activeUser]) {
@@ -567,6 +574,19 @@ export default function GroupDateFinder() {
         }
       }));
     }
+    
+    // Remove from preferred dates if marking as unavailable
+    if (!isCurrentlyMarked && activeUser) {
+      setUserPreferences(prev => {
+        const newPreferences = { ...prev };
+        if (newPreferences[activeUser]?.has(dateStr as string)) {
+          const userDates = new Set(newPreferences[activeUser]);
+          userDates.delete(dateStr as string);
+          newPreferences[activeUser] = userDates;
+        }
+        return newPreferences;
+      });
+    }
   };
 
   // Navigation functions
@@ -609,36 +629,34 @@ export default function GroupDateFinder() {
     return sortedDates;
   };
 
-  // Get all unmarked days through end of year
+  // Get all available days through end of year (where everyone is available)
   const getUnmarkedDays = () => {
     if (users.length === 0) return [];
     
     const today = new Date();
     const endOfYear = new Date(today.getFullYear(), 11, 31); // December 31
-    const unmarkedDays = [];
-    const markedDates = new Set();
-    
-    // Collect all marked dates from all users
-    users.forEach(user => {
-      Object.keys(user.dates).forEach(date => {
-        markedDates.add(date);
-      });
-    });
+    const availableDays = [];
     
     // Iterate through each day from today to end of year
     const currentDate = new Date(today);
     while (currentDate <= endOfYear) {
       const dateStr = formatDate(currentDate);
-      if (!markedDates.has(dateStr)) {
-        unmarkedDays.push(dateStr);
+      
+      // Check if ANY user is unavailable on this date
+      const isAnyoneUnavailable = users.some(user => user.dates[dateStr] === true);
+      
+      // Only include if no one is unavailable
+      if (!isAnyoneUnavailable) {
+        availableDays.push(dateStr);
       }
+      
       currentDate.setDate(currentDate.getDate() + 1);
     }
     
-    return unmarkedDays;
+    return availableDays;
   };
 
-  // Get unmarked days within a specific number of days from today
+  // Get available days within a specific number of days from today (where everyone is available)
   const getUnmarkedDaysWithinPeriod = (days: number) => {
     if (users.length === 0) return [];
     
@@ -646,27 +664,25 @@ export default function GroupDateFinder() {
     const endDate = new Date(today);
     endDate.setDate(today.getDate() + days);
     
-    const unmarkedDays = [];
-    const markedDates = new Set();
-    
-    // Collect all marked dates from all users
-    users.forEach(user => {
-      Object.keys(user.dates).forEach(date => {
-        markedDates.add(date);
-      });
-    });
+    const availableDays = [];
     
     // Iterate through each day from today to end date
     const currentDate = new Date(today);
     while (currentDate <= endDate) {
       const dateStr = formatDate(currentDate);
-      if (!markedDates.has(dateStr)) {
-        unmarkedDays.push(dateStr);
+      
+      // Check if ANY user is unavailable on this date
+      const isAnyoneUnavailable = users.some(user => user.dates[dateStr] === true);
+      
+      // Only include if no one is unavailable (everyone is available)
+      if (!isAnyoneUnavailable) {
+        availableDays.push(dateStr);
       }
+      
       currentDate.setDate(currentDate.getDate() + 1);
     }
     
-    return unmarkedDays;
+    return availableDays;
   };
 
   // Get festival meetups where people are actually attending
