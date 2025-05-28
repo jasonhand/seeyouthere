@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Users, User, CheckCircle, Music, X } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Users, User, CheckCircle, Music, X, DollarSign } from 'lucide-react';
 
 export default function GroupDateFinder() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -13,7 +13,7 @@ export default function GroupDateFinder() {
   const [activeUser, setActiveUser] = useState<number | null>(null);
   const [currentUserName, setCurrentUserName] = useState('');
   const [showUserForm, setShowUserForm] = useState(true);
-  const [view, setView] = useState('calendar'); // 'calendar' or 'results'
+  const [view, setView] = useState('calendar'); // 'calendar', 'results', or 'split'
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showMusicFestivals, setShowMusicFestivals] = useState(true);
 
@@ -333,7 +333,7 @@ export default function GroupDateFinder() {
     for (let i = 1; i <= daysInMonth; i++) {
       const currentDate = new Date(year, month, i);
       const dateStr = formatDate(currentDate);
-      const festivalsOnDay = getEventsForDate(dateStr);
+      const festivalsOnDay = showMusicFestivals ? getEventsForDate(dateStr) : [];
       
       const currentUser = users.find(u => u.id === activeUser);
       days.push({ 
@@ -585,6 +585,13 @@ export default function GroupDateFinder() {
             >
               <CheckCircle className="mr-1 h-4 w-4" /> Results
             </button>
+            <button 
+              className={`flex-1 sm:flex-none px-3 py-2 text-sm rounded-md flex items-center justify-center ${view === 'split' ? 'bg-[#033F63] text-white' : 'bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885]'}`}
+              onClick={() => setView('split')}
+              title="Split costs with your group using Split Sumthin"
+            >
+              <DollarSign className="mr-1 h-4 w-4" /> Split Costs
+            </button>
           </div>
           
           {users.length > 0 && (
@@ -665,21 +672,21 @@ export default function GroupDateFinder() {
                 <div 
                   key={index}
                   onClick={() => toggleDate(day.date)}
-                  title={day.festivals && day.festivals.length > 0 ? 
+                  title={showMusicFestivals && day.festivals && day.festivals.length > 0 ? 
                     day.festivals.map(f => `${f.name}${f.location ? ` - ${f.location}` : ''}`).join('\n') : 
                     undefined
                   }
                   className={`
                     h-10 sm:h-12 flex flex-col items-center justify-center rounded-lg cursor-pointer relative text-xs sm:text-sm
                                         ${!day.day ? 'text-[#B5B682]' : 'hover:bg-[#FEDC97]'}                    ${day.isAvailable ? 'bg-[#7C9885] text-[#033F63] font-medium' : ''}
-                                          ${day.festivals && day.festivals.length > 0 ? 'border-2 border-dashed border-[#28666E]' : ''}                      ${day.isToday ? 'ring-2 ring-[#FEDC97] bg-[#FEDC97] font-bold text-[#033F63]' : ''}
+                                          ${showMusicFestivals && day.festivals && day.festivals.length > 0 ? 'border-2 border-dashed border-[#28666E]' : ''}                      ${day.isToday ? 'ring-2 ring-[#FEDC97] bg-[#FEDC97] font-bold text-[#033F63]' : ''}
                   `}
                 >
                   {day.day}
                   {day.isToday && (
                     <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-[#28666E] rounded-full"></div>
                   )}
-                  {day.festivals && day.festivals.length > 0 && (
+                  {showMusicFestivals && day.festivals && day.festivals.length > 0 && (
                     <div className="absolute bottom-1 flex space-x-1">
                       {day.festivals.slice(0, 3).map((festival, fidx) => (
                         <div 
@@ -736,7 +743,7 @@ export default function GroupDateFinder() {
           </div>
 
         </>
-      ) : (
+      ) : view === 'results' ? (
         <div className="p-4 bg-white rounded-lg shadow">
           <h3 className="font-medium mb-4 flex items-center text-sm sm:text-base">
             <CheckCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#7C9885]" /> Best Date Options
@@ -911,6 +918,46 @@ export default function GroupDateFinder() {
               )}
             </div>
           )}
+        </div>
+      ) : (
+        <div className="p-4 bg-white rounded-lg shadow">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-medium flex items-center text-sm sm:text-base">
+              <DollarSign className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#28666E]" /> Split Costs with Split Sumthin
+            </h3>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="bg-[#FEDC97] p-4 rounded-lg border border-[#28666E]">
+              <h4 className="font-medium text-[#033F63] mb-2">Perfect Companion App!</h4>
+              <p className="text-sm text-[#033F63] mb-3">
+                Once you've planned your meetup dates, use Split Sumthin to easily split costs for accommodations, 
+                food, transportation, and festival tickets with your group.
+              </p>
+              <div className="flex justify-center">
+                <a
+                  href="https://color-coded-budget-buddy.lovable.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-[#28666E] text-white rounded-md hover:bg-[#033F63] transition-colors text-center text-sm font-medium inline-flex items-center gap-2"
+                >
+                  <DollarSign className="h-4 w-4" />
+                  Open Split Sumthin
+                </a>
+              </div>
+            </div>
+            
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="font-medium text-gray-700 mb-2 text-sm">How to use Split Sumthin with your group:</h4>
+              <ol className="text-sm text-gray-600 space-y-1 list-decimal list-inside">
+                <li>Create a new budget in Split Sumthin</li>
+                <li>Add your group members from See Ya There</li>
+                <li>Add shared expenses like festival tickets, camping fees, gas, food</li>
+                <li>Split costs fairly among participants</li>
+                <li>Track who owes what and settle up easily</li>
+              </ol>
+            </div>
+          </div>
         </div>
       )}
     </div>
