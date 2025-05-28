@@ -13,11 +13,7 @@ export default function GroupDateFinder() {
   const [activeUser, setActiveUser] = useState<number | null>(null);
   const [currentUserName, setCurrentUserName] = useState('');
   const [showUserForm, setShowUserForm] = useState(true);
-<<<<<<< HEAD
   const [view, setView] = useState('calendar'); // 'calendar', 'results', or 'split'
-=======
-  const [view, setView] = useState('calendar'); // 'calendar', 'results', or 'about'
->>>>>>> 7e5b212b6e2fe230d49f5311bf992e308e29df42
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showMusicFestivals, setShowMusicFestivals] = useState(true);
   const [showControlPanel, setShowControlPanel] = useState(true);
@@ -26,6 +22,13 @@ export default function GroupDateFinder() {
   const [festivalAttendance, setFestivalAttendance] = useState<{ [userId: number]: { [date: string]: string } }>({});
   const [showFestivalPrompt, setShowFestivalPrompt] = useState(false);
   const [pendingFestivalDate, setPendingFestivalDate] = useState<string | null>(null);
+  
+  // New state for sharing status and friend tracking
+  const [isSharedSession, setIsSharedSession] = useState(false);
+  const [friendsWithData, setFriendsWithData] = useState<string[]>([]);
+  const [showSharingStatus, setShowSharingStatus] = useState(false);
+  const [showSharingModal, setShowSharingModal] = useState(false);
+  const [sharingModalType, setSharingModalType] = useState<'new' | 'shared-with-data' | 'shared-no-data' | 'personal'>('new');
 
   // Load data from localStorage and URL on component mount
   useEffect(() => {
@@ -35,7 +38,26 @@ export default function GroupDateFinder() {
     if (sharedData) {
       try {
         const parsedData = JSON.parse(decodeURIComponent(sharedData));
-        setUsers(parsedData.users || []);
+        const loadedUsers = parsedData.users || [];
+        setUsers(loadedUsers);
+        setIsSharedSession(true);
+        
+        // Identify friends who have data (users with unavailable dates or preferences)
+        const friendsWithAvailabilityData = loadedUsers
+          .filter((user: User) => Object.keys(user.dates).length > 0)
+          .map((user: User) => user.name);
+        setFriendsWithData(friendsWithAvailabilityData);
+        
+        // Determine modal type and show it
+        if (friendsWithAvailabilityData.length > 0) {
+          setSharingModalType('shared-with-data');
+        } else {
+          setSharingModalType('shared-no-data');
+        }
+        
+        // Show modal after a brief delay to let the calendar render first
+        setTimeout(() => setShowSharingModal(true), 1000);
+        
         // Don't set activeUser from shared data - let user select themselves
       } catch (error) {
         console.error('Error parsing shared data:', error);
@@ -45,10 +67,29 @@ export default function GroupDateFinder() {
       const savedUsers = localStorage.getItem('seeYouThere_users');
       if (savedUsers) {
         try {
-          setUsers(JSON.parse(savedUsers));
+          const loadedUsers = JSON.parse(savedUsers);
+          setUsers(loadedUsers);
+          setIsSharedSession(false);
+          
+          // For local sessions, still track friends with data
+          const friendsWithAvailabilityData = loadedUsers
+            .filter((user: User) => Object.keys(user.dates).length > 0)
+            .map((user: User) => user.name);
+          setFriendsWithData(friendsWithAvailabilityData);
+          
+          // Show personal calendar modal if they have data
+          if (loadedUsers.length > 0) {
+            setSharingModalType('personal');
+            setTimeout(() => setShowSharingModal(true), 1000);
+          }
         } catch (error) {
           console.error('Error loading saved users:', error);
         }
+      } else {
+        setIsSharedSession(false);
+        // Show new calendar modal for first-time users
+        setSharingModalType('new');
+        setTimeout(() => setShowSharingModal(true), 1500);
       }
     }
 
@@ -59,6 +100,14 @@ export default function GroupDateFinder() {
       setShowUserForm(false);
     }
   }, []);
+
+  // Update friends with data when users change
+  useEffect(() => {
+    const friendsWithAvailabilityData = users
+      .filter(user => Object.keys(user.dates).length > 0)
+      .map(user => user.name);
+    setFriendsWithData(friendsWithAvailabilityData);
+  }, [users]);
 
   // Save users to localStorage whenever users change
   useEffect(() => {
@@ -162,11 +211,26 @@ export default function GroupDateFinder() {
   const copyShareableURL = async () => {
     try {
       await navigator.clipboard.writeText(generateShareableURL());
-      alert('Shareable URL copied to clipboard!');
+      
+      // Show success message with sharing tips
+      const message = friendsWithData.length > 0 
+        ? `✅ Shareable URL copied! This includes data from: ${friendsWithData.join(', ')}`
+        : '✅ Shareable URL copied! Share this with friends so they can add their availability.';
+      
+      alert(message);
+      
+      // Briefly show sharing status
+      setShowSharingStatus(true);
+      setTimeout(() => setShowSharingStatus(false), 3000);
+      
     } catch (error) {
       console.error('Failed to copy URL:', error);
       // Fallback: show URL in prompt
-      prompt('Copy this URL to share:', generateShareableURL());
+      const url = generateShareableURL();
+      const message = friendsWithData.length > 0 
+        ? `Copy this URL to share (includes data from ${friendsWithData.join(', ')}): `
+        : 'Copy this URL to share with friends: ';
+      prompt(message, url);
     }
   };
 
@@ -561,12 +625,7 @@ export default function GroupDateFinder() {
     for (let i = 1; i <= daysInMonth; i++) {
       const currentDate = new Date(year, month, i);
       const dateStr = formatDate(currentDate);
-<<<<<<< HEAD
       const festivalsOnDay = showMusicFestivals ? getEventsForDate(dateStr) : [];
-=======
-      const festivalsOnDay = getEventsForDate(dateStr);
-      const holidaysOnDay = getHolidaysForDate(dateStr);
->>>>>>> 7e5b212b6e2fe230d49f5311bf992e308e29df42
       
       const currentUser = users.find(u => u.id === activeUser);
       days.push({ 
@@ -574,7 +633,7 @@ export default function GroupDateFinder() {
         date: dateStr,
         isUnavailable: currentUser?.dates[dateStr] === true,
         festivals: showMusicFestivals ? festivalsOnDay : [],
-        holidays: holidaysOnDay,
+        holidays: getHolidaysForDate(dateStr),
         isToday: isToday(dateStr),
         isPreferred: getCurrentUserPreferences().has(dateStr)
       });
@@ -1169,12 +1228,118 @@ export default function GroupDateFinder() {
     </div>
   );
 
+  // Sharing Status Modal Component
+  const SharingStatusModal = () => {
+    if (!showSharingModal) return null;
+
+    const handleBackdropClick = (e: React.MouseEvent) => {
+      if (e.target === e.currentTarget) {
+        setShowSharingModal(false);
+      }
+    };
+
+    const getModalContent = () => {
+      switch (sharingModalType) {
+        case 'new':
+          return {
+            icon: <Calendar className="h-8 w-8 text-blue-600" />,
+            title: "Welcome to See Ya There! 🎉",
+            message: "You're starting a fresh calendar. Mark dates when you are NOT available, then share it with friends to start group planning!",
+            tip: "💡 Tip: Click on dates to mark them as unavailable, then use the Share button to invite friends",
+            bgColor: "bg-blue-50",
+            borderColor: "border-blue-200",
+            textColor: "text-blue-900",
+            tipColor: "text-blue-600"
+          };
+        case 'shared-with-data':
+          return {
+            icon: <Users className="h-8 w-8 text-green-600" />,
+            title: "Shared Calendar with Friends! 👥",
+            message: `This calendar includes availability data from: ${friendsWithData.join(', ')}`,
+            tip: "✅ Add your own availability to help the group find the best meetup dates!",
+            bgColor: "bg-green-50",
+            borderColor: "border-green-200",
+            textColor: "text-green-900",
+            tipColor: "text-green-600"
+          };
+        case 'shared-no-data':
+          return {
+            icon: <Users className="h-8 w-8 text-yellow-600" />,
+            title: "Shared Calendar - No Data Yet 📅",
+            message: "You opened a shared calendar link, but no one has added their availability yet.",
+            tip: "🚀 Be the first to add your unavailable dates and start the planning process!",
+            bgColor: "bg-yellow-50",
+            borderColor: "border-yellow-200",
+            textColor: "text-yellow-900",
+            tipColor: "text-yellow-600"
+          };
+        case 'personal':
+          return {
+            icon: <Calendar className="h-8 w-8 text-purple-600" />,
+            title: "Your Personal Calendar 📋",
+            message: `You have ${users.length} ${users.length === 1 ? 'user' : 'users'} in your local calendar. Share it with friends to start group planning!`,
+            tip: "📤 Use the Share button to send your calendar to friends",
+            bgColor: "bg-purple-50",
+            borderColor: "border-purple-200",
+            textColor: "text-purple-900",
+            tipColor: "text-purple-600"
+          };
+        default:
+          return null;
+      }
+    };
+
+    const content = getModalContent();
+    if (!content) return null;
+
+    return (
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        onClick={handleBackdropClick}
+      >
+        <div className={`${content.bgColor} p-6 rounded-lg shadow-lg max-w-md w-full mx-4 border-2 ${content.borderColor} relative`}>
+          <button
+            onClick={() => setShowSharingModal(false)}
+            className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 mt-1">
+              {content.icon}
+            </div>
+            <div className="flex-1">
+              <h3 className={`font-bold ${content.textColor} mb-3 text-lg`}>{content.title}</h3>
+              <p className={`${content.textColor} mb-4 text-sm leading-relaxed`}>
+                {content.message}
+              </p>
+              <div className={`${content.tipColor} text-sm font-medium`}>
+                {content.tip}
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={() => setShowSharingModal(false)}
+              className="px-6 py-2 bg-[#28666E] text-white rounded-lg hover:bg-[#033F63] font-medium"
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-col min-h-screen pt-0 px-2 sm:px-4 pb-2 sm:pb-4 bg-gray-50">
       {showUserForm && <UserForm />}
       {showUserModal && <UserManagementModal />}
       {showFestivalPrompt && <FestivalPrompt />}
       {showResetConfirm && <ResetConfirmDialog />}
+      {showSharingModal && <SharingStatusModal />}
       
       <div className="mb-0">
         {/* Logo header */}
@@ -1200,7 +1365,7 @@ export default function GroupDateFinder() {
 
         {/* Main Navigation - Always visible */}
         <div className="bg-white p-3 rounded-lg shadow-sm border mb-4">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             <button 
               className={`px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors ${view === 'calendar' ? 'bg-[#033F63] text-white' : 'bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885] hover:text-white'}`}
               onClick={() => setView('calendar')}
@@ -1213,25 +1378,19 @@ export default function GroupDateFinder() {
             >
               <CheckCircle className="mr-2 h-4 w-4" /> Results
             </button>
+            <button 
+              className={`px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors ${view === 'split' ? 'bg-[#033F63] text-white' : 'bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885] hover:text-white'}`}
+              onClick={() => setView('split')}
+              title="Split costs with your group using Split Sumthin"
+            >
+              <DollarSign className="mr-1 h-4 w-4" /> Split Costs
+            </button>
             <button
               onClick={() => setShowUserModal(true)}
               className="px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors bg-[#7C9885] text-white hover:bg-[#28666E]"
             >
               <Users className="mr-2 h-4 w-4" /> Users
             </button>
-<<<<<<< HEAD
-            <button 
-              className={`flex-1 sm:flex-none px-3 py-2 text-sm rounded-md flex items-center justify-center ${view === 'split' ? 'bg-[#033F63] text-white' : 'bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885]'}`}
-              onClick={() => setView('split')}
-              title="Split costs with your group using Split Sumthin"
-            >
-              <DollarSign className="mr-1 h-4 w-4" /> Split Costs
-            </button>
-          </div>
-          
-          {users.length > 0 && (
-=======
->>>>>>> 7e5b212b6e2fe230d49f5311bf992e308e29df42
             <button
               onClick={copyShareableURL}
               className={`px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors ${
@@ -1261,6 +1420,8 @@ export default function GroupDateFinder() {
         </div>
       </div>
 
+      {/* Sharing Status Modal */}
+      <SharingStatusModal />
 
       {/* Calendar View */}
       {view === 'calendar' && (
@@ -1291,16 +1452,6 @@ export default function GroupDateFinder() {
                 <div 
                   key={index}
                   onClick={() => toggleDate(day.date)}
-<<<<<<< HEAD
-                  title={showMusicFestivals && day.festivals && day.festivals.length > 0 ? 
-                    day.festivals.map(f => `${f.name}${f.location ? ` - ${f.location}` : ''}`).join('\n') : 
-                    undefined
-                  }
-                  className={`
-                    h-10 sm:h-12 flex flex-col items-center justify-center rounded-lg cursor-pointer relative text-xs sm:text-sm
-                                        ${!day.day ? 'text-[#B5B682]' : 'hover:bg-[#FEDC97]'}                    ${day.isAvailable ? 'bg-[#7C9885] text-[#033F63] font-medium' : ''}
-                                          ${showMusicFestivals && day.festivals && day.festivals.length > 0 ? 'border-2 border-dashed border-[#28666E]' : ''}                      ${day.isToday ? 'ring-2 ring-[#FEDC97] bg-[#FEDC97] font-bold text-[#033F63]' : ''}
-=======
                   title={[
                     `${day.isUnavailable ? 'You are NOT available' : 'Click to mark as unavailable'}`,
                     ...(day.isPreferred ? ['⭐ Preferred meetup date'] : []),
@@ -1315,16 +1466,12 @@ export default function GroupDateFinder() {
                     ${day.festivals && day.festivals.length > 0 ? 'border-2 border-dashed border-[#28666E]' : ''}
                     ${day.holidays && day.holidays.length > 0 ? 'bg-red-100 border-2 border-red-300' : ''}
                     ${day.isToday ? 'ring-2 ring-[#FEDC97] bg-[#FEDC97] font-bold text-[#033F63]' : ''}
->>>>>>> 7e5b212b6e2fe230d49f5311bf992e308e29df42
                   `}
                 >
                   {day.day}
                   {day.isToday && (
                     <div className="absolute -top-1 -right-1 w-2 h-2 sm:w-3 sm:h-3 bg-[#28666E] rounded-full"></div>
                   )}
-<<<<<<< HEAD
-                  {showMusicFestivals && day.festivals && day.festivals.length > 0 && (
-=======
                   {day.isPreferred && (
                     <div className="absolute -top-1 -left-1 text-xs">⭐</div>
                   )}
@@ -1332,7 +1479,6 @@ export default function GroupDateFinder() {
                     <div className="absolute -top-1 -left-1 text-xs">🇺🇸</div>
                   )}
                   {day.festivals && day.festivals.length > 0 && (
->>>>>>> 7e5b212b6e2fe230d49f5311bf992e308e29df42
                     <div className="absolute bottom-1 flex space-x-1">
                       {day.festivals.slice(0, 3).map((festival, fidx) => (
                         <div 
@@ -1351,16 +1497,6 @@ export default function GroupDateFinder() {
           </div>
 
         </>
-<<<<<<< HEAD
-      ) : view === 'results' ? (
-        <div className="p-4 bg-white rounded-lg shadow">
-          <h3 className="font-medium mb-4 flex items-center text-sm sm:text-base">
-            <CheckCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#7C9885]" /> Best Date Options
-          </h3>
-          
-          {getBestDates().length === 0 ? (
-            <p className="text-gray-500 text-center my-8 text-sm sm:text-base">No dates have been selected yet. Go to Calendar View to select available dates.</p>
-=======
       )}
 
       {/* Music Festivals Legend - Only show in Calendar view */}
@@ -1416,7 +1552,6 @@ export default function GroupDateFinder() {
               </h3>
               <p className="text-gray-500 text-center my-8 text-sm sm:text-base">Create users and mark unavailable dates to see meetup suggestions.</p>
             </div>
->>>>>>> 7e5b212b6e2fe230d49f5311bf992e308e29df42
           ) : (
             <>
               {/* Group Preferred Dates Section */}
@@ -1950,7 +2085,10 @@ export default function GroupDateFinder() {
             </>
           )}
         </div>
-      ) : (
+      )}
+
+      {/* Split Costs View */}
+      {view === 'split' && (
         <div className="p-4 bg-white rounded-lg shadow">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-medium flex items-center text-sm sm:text-base">
@@ -1996,7 +2134,7 @@ export default function GroupDateFinder() {
       {view === 'about' && <AboutPage />}
 
       {/* Footer - only show on main views */}
-      {(view === 'calendar' || view === 'results') && (
+      {(view === 'calendar' || view === 'results' || view === 'split') && (
         <div className="mt-8 text-center py-4 border-t border-gray-200">
           <button
             onClick={() => setView('about')}
