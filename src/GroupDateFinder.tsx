@@ -29,6 +29,7 @@ export default function GroupDateFinder() {
   const [showSharingStatus, setShowSharingStatus] = useState(false);
   const [showSharingModal, setShowSharingModal] = useState(false);
   const [sharingModalType, setSharingModalType] = useState<'new' | 'shared-with-data' | 'shared-no-data' | 'personal'>('new');
+  const [hasSeenSharingModal, setHasSeenSharingModal] = useState(false);
 
   // Load data from localStorage and URL on component mount
   useEffect(() => {
@@ -56,7 +57,11 @@ export default function GroupDateFinder() {
         }
         
         // Show modal after a brief delay to let the calendar render first
-        setTimeout(() => setShowSharingModal(true), 1000);
+        setTimeout(() => {
+          if (!hasSeenSharingModal) {
+            setShowSharingModal(true);
+          }
+        }, 1000);
         
         // Don't set activeUser from shared data - let user select themselves
       } catch (error) {
@@ -80,7 +85,11 @@ export default function GroupDateFinder() {
           // Show personal calendar modal if they have data
           if (loadedUsers.length > 0) {
             setSharingModalType('personal');
-            setTimeout(() => setShowSharingModal(true), 1000);
+            setTimeout(() => {
+              if (!hasSeenSharingModal) {
+                setShowSharingModal(true);
+              }
+            }, 1000);
           }
         } catch (error) {
           console.error('Error loading saved users:', error);
@@ -89,7 +98,11 @@ export default function GroupDateFinder() {
         setIsSharedSession(false);
         // Show new calendar modal for first-time users
         setSharingModalType('new');
-        setTimeout(() => setShowSharingModal(true), 1500);
+        setTimeout(() => {
+          if (!hasSeenSharingModal) {
+            setShowSharingModal(true);
+          }
+        }, 1500);
       }
     }
 
@@ -160,6 +173,14 @@ export default function GroupDateFinder() {
   useEffect(() => {
     localStorage.setItem('seeYouThere_festivalAttendance', JSON.stringify(festivalAttendance));
   }, [festivalAttendance]);
+
+  // Load "don't show again" preference for sharing modal
+  useEffect(() => {
+    const dontShowAgain = localStorage.getItem('seeYouThere_dontShowSharingModal');
+    if (dontShowAgain === 'true') {
+      setHasSeenSharingModal(true);
+    }
+  }, []);
 
   // Update activeUser when currentUserName changes
   useEffect(() => {
@@ -1238,6 +1259,16 @@ export default function GroupDateFinder() {
       }
     };
 
+    const handleDontShowAgain = () => {
+      localStorage.setItem('seeYouThere_dontShowSharingModal', 'true');
+      setHasSeenSharingModal(true);
+      setShowSharingModal(false);
+    };
+
+    const handleGotIt = () => {
+      setShowSharingModal(false);
+    };
+
     const getModalContent = () => {
       switch (sharingModalType) {
         case 'new':
@@ -1249,29 +1280,33 @@ export default function GroupDateFinder() {
             bgColor: "bg-blue-50",
             borderColor: "border-blue-200",
             textColor: "text-blue-900",
-            tipColor: "text-blue-600"
+            tipColor: "text-blue-600",
+            showDontShowAgain: true
           };
         case 'shared-with-data':
           return {
             icon: <Users className="h-8 w-8 text-green-600" />,
             title: "Shared Calendar with Friends! 👥",
-            message: `This calendar includes availability data from: ${friendsWithData.join(', ')}`,
+            message: `This calendar includes availability data from ${friendsWithData.length} ${friendsWithData.length === 1 ? 'friend' : 'friends'}:`,
+            friendsList: friendsWithData,
             tip: "✅ Add your own availability to help the group find the best meetup dates!",
             bgColor: "bg-green-50",
             borderColor: "border-green-200",
             textColor: "text-green-900",
-            tipColor: "text-green-600"
+            tipColor: "text-green-600",
+            showDontShowAgain: true
           };
         case 'shared-no-data':
           return {
             icon: <Users className="h-8 w-8 text-yellow-600" />,
             title: "Shared Calendar - No Data Yet 📅",
-            message: "You opened a shared calendar link, but no one has added their availability yet.",
+            message: `You opened a shared calendar link, but none of the ${users.length} ${users.length === 1 ? 'person' : 'people'} have added their availability yet.`,
             tip: "🚀 Be the first to add your unavailable dates and start the planning process!",
             bgColor: "bg-yellow-50",
             borderColor: "border-yellow-200",
             textColor: "text-yellow-900",
-            tipColor: "text-yellow-600"
+            tipColor: "text-yellow-600",
+            showDontShowAgain: true
           };
         case 'personal':
           return {
@@ -1282,7 +1317,8 @@ export default function GroupDateFinder() {
             bgColor: "bg-purple-50",
             borderColor: "border-purple-200",
             textColor: "text-purple-900",
-            tipColor: "text-purple-600"
+            tipColor: "text-purple-600",
+            showDontShowAgain: true
           };
         default:
           return null;
@@ -1311,22 +1347,53 @@ export default function GroupDateFinder() {
             </div>
             <div className="flex-1">
               <h3 className={`font-bold ${content.textColor} mb-3 text-lg`}>{content.title}</h3>
-              <p className={`${content.textColor} mb-4 text-sm leading-relaxed`}>
+              <p className={`${content.textColor} mb-3 text-sm leading-relaxed`}>
                 {content.message}
               </p>
+              
+              {/* Friends list for shared-with-data */}
+              {content.friendsList && content.friendsList.length > 0 && (
+                <div className="mb-3">
+                  <div className="mb-2">
+                    <span className={`text-sm font-semibold ${content.textColor}`}>
+                      {content.friendsList.length} {content.friendsList.length === 1 ? 'Friend' : 'Friends'} with Data:
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {content.friendsList.map((friendName, index) => (
+                      <span 
+                        key={index}
+                        className={`px-3 py-1 text-sm ${content.textColor} bg-white rounded-full border ${content.borderColor} font-medium shadow-sm`}
+                      >
+                        👤 {friendName}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
               <div className={`${content.tipColor} text-sm font-medium`}>
                 {content.tip}
               </div>
             </div>
           </div>
           
-          <div className="mt-6 flex justify-center">
+          <div className="mt-6 flex flex-col gap-3">
             <button
-              onClick={() => setShowSharingModal(false)}
+              onClick={handleGotIt}
               className="px-6 py-2 bg-[#28666E] text-white rounded-lg hover:bg-[#033F63] font-medium"
             >
               Got it!
             </button>
+            
+            {content.showDontShowAgain && (
+              <button
+                onClick={handleDontShowAgain}
+                className="px-6 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 text-sm"
+              >
+                Don't show this again
+              </button>
+            )}
           </div>
         </div>
       </div>
