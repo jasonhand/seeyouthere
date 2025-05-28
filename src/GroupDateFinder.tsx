@@ -13,7 +13,7 @@ export default function GroupDateFinder() {
   const [activeUser, setActiveUser] = useState<number | null>(null);
   const [currentUserName, setCurrentUserName] = useState('');
   const [showUserForm, setShowUserForm] = useState(true);
-  const [view, setView] = useState('calendar'); // 'calendar', 'results', or 'split'
+  const [view, setView] = useState('calendar'); // 'calendar' or 'results'
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [showMusicFestivals, setShowMusicFestivals] = useState(true);
   const [showControlPanel, setShowControlPanel] = useState(true);
@@ -1432,7 +1432,7 @@ export default function GroupDateFinder() {
 
         {/* Main Navigation - Always visible */}
         <div className="bg-white p-3 rounded-lg shadow-sm border mb-4">
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <button 
               className={`px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors ${view === 'calendar' ? 'bg-[#033F63] text-white' : 'bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885] hover:text-white'}`}
               onClick={() => setView('calendar')}
@@ -1446,17 +1446,11 @@ export default function GroupDateFinder() {
               <CheckCircle className="mr-2 h-4 w-4" /> Results
             </button>
             <button 
-              className={`px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors ${view === 'split' ? 'bg-[#033F63] text-white' : 'bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885] hover:text-white'}`}
-              onClick={() => setView('split')}
+              className="px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885] hover:text-white"
+              onClick={() => window.open('https://color-coded-budget-buddy.lovable.app/', '_blank')}
               title="Split costs with your group using Split Sumthin"
             >
               <DollarSign className="mr-1 h-4 w-4" /> Split Costs
-            </button>
-            <button
-              onClick={() => setShowUserModal(true)}
-              className="px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors bg-[#7C9885] text-white hover:bg-[#28666E]"
-            >
-              <Users className="mr-2 h-4 w-4" /> Users
             </button>
             <button
               onClick={copyShareableURL}
@@ -1468,6 +1462,16 @@ export default function GroupDateFinder() {
               disabled={users.length === 0}
             >
               <Users className="mr-2 h-4 w-4" /> Share
+            </button>
+          </div>
+          
+          {/* Users button - full width on second row */}
+          <div className="grid grid-cols-1 gap-3 mt-3">
+            <button
+              onClick={() => setShowUserModal(true)}
+              className="px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors bg-[#7C9885] text-white hover:bg-[#28666E]"
+            >
+              <Users className="mr-2 h-4 w-4" /> Users
             </button>
           </div>
         </div>
@@ -2201,7 +2205,7 @@ export default function GroupDateFinder() {
       {view === 'about' && <AboutPage />}
 
       {/* Footer - only show on main views */}
-      {(view === 'calendar' || view === 'results' || view === 'split') && (
+      {(view === 'calendar' || view === 'results') && (
         <div className="mt-8 text-center py-4 border-t border-gray-200">
           <button
             onClick={() => setView('about')}
