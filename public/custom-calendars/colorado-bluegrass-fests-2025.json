@@ -1,0 +1,179 @@
+{
+  "name": "Colorado Bluegrass Festivals 2025",
+  "description": "Bluegrass and music festivals throughout 2025",
+  "enabled": true,
+  "color": "#28666E",
+  "events": [
+    {
+      "id": 3,
+      "name": "Goldengrass",
+      "startDate": "2025-05-29",
+      "endDate": "2025-06-01",
+      "dayOfWeekStart": "Thursday",
+      "location": "New Terrain Brewing Co",
+      "description": "Four days of bluegrass music and craft beer.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 4,
+      "name": "Town Park Pre-TBF",
+      "startDate": "2025-06-14",
+      "endDate": "2025-06-18",
+      "dayOfWeekStart": "Saturday",
+      "location": "Telluride, CO",
+      "description": "Pre-festival gathering at Town Park before the main Telluride Bluegrass Festival.",
+      "color": "bg-sky-200"
+    },
+    {
+      "id": 5,
+      "name": "Telluride Bluegrass Festival",
+      "startDate": "2025-06-18",
+      "endDate": "2025-06-22",
+      "dayOfWeekStart": "Thursday",
+      "location": "Telluride, CO",
+      "description": "Nestled in the rugged San Juan Mountains of Southwestern Colorado, the Telluride Bluegrass Festival is not only an iconic representation of all kinds of bluegrass music, but a destination for music lovers from all walks of life.",
+      "color": "bg-indigo-200"
+    },
+    {
+      "id": 6,
+      "name": "Rail on the River",
+      "startDate": "2025-06-26",
+      "endDate": "2025-06-29",
+      "dayOfWeekStart": "Thursday",
+      "location": "Parrish Ranch",
+      "website": "Tickets at railarts.org",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 7,
+      "name": "High Mountain Hay Fever",
+      "startDate": "2025-07-10",
+      "endDate": "2025-07-13",
+      "dayOfWeekStart": "Thursday",
+      "location": "Westcliffe, CO",
+      "description": "Great Music, Great Place, Great Cause",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 8,
+      "name": "BoogieOnTheHill",
+      "startDate": "2025-07-18",
+      "endDate": "2025-07-20",
+      "dayOfWeekStart": "Friday",
+      "location": "Lyons, CO",
+      "description": "BoogieOnTheHill is a small and intimate camping gathering held on 35 private acres outside of Lyons, CO this July 18th & 19th. We offer a lot of fun for an affordable price.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 9,
+      "name": "Rockygrass Academy",
+      "startDate": "2025-07-20",
+      "endDate": "2025-07-24",
+      "dayOfWeekStart": "Sunday",
+      "location": "Planetbluegrass Lyons Colorado",
+      "description": "RockyGrass Academy is an intensive bluegrass music camp offering workshops and instruction.",
+      "color": "bg-violet-200"
+    },
+    {
+      "id": 10,
+      "name": "Rockygrass",
+      "startDate": "2025-07-24",
+      "endDate": "2025-07-27",
+      "dayOfWeekStart": "Friday",
+      "location": "Planetbluegrass Lyons Colorado",
+      "description": "Located in Lyons, Colorado, RockyGrass is traditional bluegrass at its finest. Red rock cliffs and Cottonwoods peer down over the property as festivarians pick in the campground and along the St. Vrain River.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 11,
+      "name": "Rhythms on the Rio",
+      "startDate": "2025-07-31",
+      "endDate": "2025-08-03",
+      "dayOfWeekStart": "Thursday",
+      "location": "Del Norte, CO ",
+      "color": "bg-teal-200"
+    },
+    {
+      "id": 12,
+      "name": "The Song School",
+      "startDate": "2025-08-10",
+      "endDate": "2025-08-14",
+      "dayOfWeekStart": "Sunday",
+      "location": "Lyons, CO",
+      "description": "Imagine a place where you can explore and grow every aspect of your song- writing and creativity:  melody, lyrics, performance, voice, story, guitar techniques… a place where you receive professional feedback, music business and recording tips.",
+      "color": "bg-sky-200"
+    },
+    {
+      "id": 13,
+      "name": "Rapidgrass",
+      "startDate": "2025-08-15",
+      "endDate": "2025-08-16",
+      "dayOfWeekStart": "Friday",
+      "location": "Rapidgrass Bluegrass Festival",
+      "color": "bg-cyan-200"
+    },
+    {
+      "id": 14,
+      "name": "Folks Festival",
+      "startDate": "2025-08-15",
+      "endDate": "2025-08-17",
+      "dayOfWeekStart": "Friday",
+      "location": "Lyons, CO",
+      "color": "bg-cyan-200"
+    },
+    {
+      "id": 15,
+      "name": "SnowyGrass",
+      "startDate": "2025-08-21",
+      "endDate": "2025-08-24",
+      "dayOfWeekStart": "Thursday",
+      "location": "Stanley Park",
+      "description": "10th Annual SnowyGrass. Panoramic Views, Camping and Jamming Festival. Dog-friendly",
+      "color": "bg-blue-100"
+    },
+    {
+      "id": 16,
+      "name": "McAwesome Ranch",
+      "startDate": "2025-08-23",
+      "endDate": "2025-08-23",
+      "dayOfWeekStart": "Saturday",
+      "time": "All Day",
+      "location": "McAwesome Ranch",
+      "description": "As we approach the 6th annual installment of The Colorado Bluegrass Festival, it is clear that this event is unlike any other night of music in Colorado.",
+      "color": "bg-lime-200"
+    },
+    {
+      "id": 17,
+      "name": "WanderFest",
+      "startDate": "2025-09-11",
+      "endDate": "2025-09-13",
+      "dayOfWeekStart": "Thursday",
+      "location": "New Terrain Brewing Co",
+      "description": "Dates have been set for WanderFest 2025! We will have 3 days of live music from Thursday, 9/11 - Saturday, 9/13. For more information visit our website.",
+      "color": "bg-fuchsia-200"
+    },
+    {
+      "id": 18,
+      "name": "Pickin' In The Rockies",
+      "startDate": "2025-09-14",
+      "endDate": "2025-09-14",
+      "dayOfWeekStart": "Sunday",
+      "time": "All Day",
+      "location": "Absolute Prestige Ranch",
+      "description": "Pickin' In The Rockies is a festival in western Colorado that is providing a whoopin', hollerin', toe tappin', hand clappin' good time for the entire family.",
+      "color": "bg-rose-200"
+    },
+    {
+      "id": 19,
+      "name": "Buffalo",
+      "startDate": "2025-10-03",
+      "startTime": "12:00 pm",
+      "endDate": "2025-10-05",
+      "endTime": "9:00 pm",
+      "dayOfWeekStart": "Friday",
+      "location": "Buffalo Grass Bluegrass Festival",
+      "description": "Save the date and join us for the second annual Buffalo Bluegrass & Picking Festival! Featuring live music from some great local artists, daily workshops, and a band scramble.",
+      "color": "bg-amber-200"
+    }
+  ]
+} 

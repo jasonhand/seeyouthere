@@ -1,0 +1,479 @@
+{
+  "name": "Mishawaka Amphitheater 2025",
+  "description": "Complete 2025 concert schedule for Mishawaka Amphitheater in Bellvue, Colorado",
+  "enabled": true,
+  "color": "#8B4513",
+  "icon": "🏔️",
+  "events": [
+    {
+      "id": 1,
+      "name": "Marty Stuart and His Fabulous Superlatives w/ Poudre Valley Playboys",
+      "startDate": "2025-05-30",
+      "endDate": "2025-05-30",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "Presented by 105.5 The Colorado Sound. All Ages, 8pm, $33.50 to $95",
+      "color": "bg-amber-200"
+    },
+    {
+      "id": 2,
+      "name": "Yonder Mountain String Band w/ The Fretliners (Night 1)",
+      "startDate": "2025-05-31",
+      "endDate": "2025-05-31",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $47 to $77. Two-day pass available for $77",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 3,
+      "name": "Yonder Mountain String Band w/ The Fretliners (Night 2)",
+      "startDate": "2025-06-01",
+      "endDate": "2025-06-01",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 7pm, $20 to $72",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 4,
+      "name": "Foco Dead Night with Tumbledown Shack (AT THE COAST)",
+      "startDate": "2025-06-04",
+      "endDate": "2025-06-04",
+      "dayOfWeekStart": "Wednesday",
+      "location": "The Coast, Fort Collins, CO",
+      "description": "6:30pm, $12.88",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 5,
+      "name": "Sages & Spirits feat. Melvin Seals, Jay Lane, Rob Eaton, John Kadlecik, Rob Barraco, Skip Vangelas, and Jake Wolf (Night 1)",
+      "startDate": "2025-06-06",
+      "endDate": "2025-06-06",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $64 to $92.50. Two-day pass available for $114",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 6,
+      "name": "Sages & Spirits feat. Melvin Seals, Jay Lane, Rob Eaton, John Kadlecik, Rob Barraco, Skip Vangelas, and Jake Wolf (Night 2)",
+      "startDate": "2025-06-07",
+      "endDate": "2025-06-07",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $70.50 to $98.50",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 7,
+      "name": "Sunday Summer Series: Michael Morrow & The Culprits",
+      "startDate": "2025-06-08",
+      "endDate": "2025-06-08",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "FREE event, All Ages, 12pm",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 8,
+      "name": "BERTHA: Grateful Drag w/ Special Guests: Liz Agna, Vegina Quartz, and Ambrose",
+      "startDate": "2025-06-13",
+      "endDate": "2025-06-13",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $40 to $72",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 9,
+      "name": "Buckethead",
+      "startDate": "2025-06-14",
+      "endDate": "2025-06-14",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $64 to $92.50",
+      "color": "bg-gray-200"
+    },
+    {
+      "id": 10,
+      "name": "HeartByrne (Talking Heads) w/ Rumours (Fleetwood Mac) and Rolling Harvest (Bob Dylan/Neil Young)",
+      "startDate": "2025-06-15",
+      "endDate": "2025-06-15",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 7pm, $34 to $59.50",
+      "color": "bg-indigo-200"
+    },
+    {
+      "id": 11,
+      "name": "Campfire Sessions: Bonnie & Taylor Sims (AT RIVERSIDE COLORADO)",
+      "startDate": "2025-06-19",
+      "endDate": "2025-06-19",
+      "dayOfWeekStart": "Thursday",
+      "location": "Riverside Colorado",
+      "description": "Mishawaka Presents, All Ages, 7pm, $28",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 12,
+      "name": "Tycho (Live)",
+      "startDate": "2025-06-20",
+      "endDate": "2025-06-20",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $64 to $117",
+      "color": "bg-teal-200"
+    },
+    {
+      "id": 13,
+      "name": "The Cat Empire – Bird in Paradise Album Tour w/ The Sweet Lillies",
+      "startDate": "2025-06-21",
+      "endDate": "2025-06-21",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "Presented by 105.5 The Colorado Sound, All Ages, 8pm, $53 to $162",
+      "color": "bg-cyan-200"
+    },
+    {
+      "id": 14,
+      "name": "Drive-By Truckers & Deer Tick w/ Thelma and the Sleaze",
+      "startDate": "2025-06-22",
+      "endDate": "2025-06-22",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "Presented by 105.5 The Colorado Sound, All Ages, 7pm, $66 to $88",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 15,
+      "name": "Mon Rovia w/ Delaney Bailey and Lewis Turner",
+      "startDate": "2025-06-29",
+      "endDate": "2025-06-29",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 7pm, $38.50 to $66",
+      "color": "bg-lime-200"
+    },
+    {
+      "id": 16,
+      "name": "The California Honeydrops – Lazy Days Summer Tour (Night 1)",
+      "startDate": "2025-07-02",
+      "endDate": "2025-07-02",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "Presented by 105.5 The Colorado Sound, All Ages, 8pm, $53 to $83. Two-day pass available for $88",
+      "color": "bg-amber-200"
+    },
+    {
+      "id": 17,
+      "name": "The California Honeydrops – Lazy Days Summer Tour (Night 2)",
+      "startDate": "2025-07-03",
+      "endDate": "2025-07-03",
+      "dayOfWeekStart": "Thursday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "Presented by 105.5 The Colorado Sound, All Ages, 8pm, $53 to $83",
+      "color": "bg-amber-200"
+    },
+    {
+      "id": 18,
+      "name": "Dead Floyd Presents: 'Mish You Were Here' w/ Switchman Sleepin'",
+      "startDate": "2025-07-11",
+      "endDate": "2025-07-11",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "Celebrating 50 Years of Pink Floyd's Wish You Were Here, All Ages, 8pm, $34 to $66",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 19,
+      "name": "Houndmouth (SOLD OUT)",
+      "startDate": "2025-07-12",
+      "endDate": "2025-07-12",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "SOLD OUT, All Ages, 8pm, $59.50 to $88",
+      "color": "bg-red-300"
+    },
+    {
+      "id": 20,
+      "name": "Sunday Summer Series: Knuckleball",
+      "startDate": "2025-07-13",
+      "endDate": "2025-07-13",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 1pm, $0 to $10",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 21,
+      "name": "Jake Shimabukuro",
+      "startDate": "2025-07-15",
+      "endDate": "2025-07-15",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $40 to $72",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 22,
+      "name": "Social Distortion w/ Plague Vendor (SOLD OUT)",
+      "startDate": "2025-07-16",
+      "endDate": "2025-07-16",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "SOLD OUT, Presented by 105.5 Colorado Sound, All Ages, 8pm, $65 to $296.50",
+      "color": "bg-red-300"
+    },
+    {
+      "id": 23,
+      "name": "Aaron Watson",
+      "startDate": "2025-07-18",
+      "endDate": "2025-07-18",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $40 to $72",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 24,
+      "name": "Bingo Loco (Early Show)",
+      "startDate": "2025-07-19",
+      "endDate": "2025-07-19",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "5pm, $45",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 25,
+      "name": "Bingo Loco (Late Show)",
+      "startDate": "2025-07-19",
+      "endDate": "2025-07-19",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "9:30pm, $45",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 26,
+      "name": "Sunday Summer Series: Starlight & Pine",
+      "startDate": "2025-07-20",
+      "endDate": "2025-07-20",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 1pm",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 27,
+      "name": "Campfire Sessions: Graham Good (AT RIVERSIDE COLORADO)",
+      "startDate": "2025-07-24",
+      "endDate": "2025-07-24",
+      "dayOfWeekStart": "Thursday",
+      "location": "Riverside Colorado",
+      "description": "Mishawaka Presents, All Ages, 7pm, $18",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 28,
+      "name": "KOAN Sound w/ Machinedrum",
+      "startDate": "2025-07-25",
+      "endDate": "2025-07-25",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $49.50 to $79.50",
+      "color": "bg-indigo-200"
+    },
+    {
+      "id": 29,
+      "name": "All Them Witches w/ Los Toms",
+      "startDate": "2025-07-26",
+      "endDate": "2025-07-26",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $50 to $81",
+      "color": "bg-gray-200"
+    },
+    {
+      "id": 30,
+      "name": "Sunday Summer Series: Solpride",
+      "startDate": "2025-07-27",
+      "endDate": "2025-07-27",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 1pm, $0 to $10",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 31,
+      "name": "Buti Yoga & Beats",
+      "startDate": "2025-07-29",
+      "endDate": "2025-07-29",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 6pm, $35",
+      "color": "bg-teal-200"
+    },
+    {
+      "id": 32,
+      "name": "Shadowgrass + Mountain Grass Unit (Night 1)",
+      "startDate": "2025-08-01",
+      "endDate": "2025-08-01",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $41 to $73. Two-day pass available for $73",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 33,
+      "name": "Shadowgrass + Mountain Grass Unit (Night 2)",
+      "startDate": "2025-08-02",
+      "endDate": "2025-08-02",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $48 to $78",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 34,
+      "name": "Dogs In A Pile",
+      "startDate": "2025-08-03",
+      "endDate": "2025-08-03",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $34 to $59.50",
+      "color": "bg-cyan-200"
+    },
+    {
+      "id": 35,
+      "name": "BoomBox & Random Rab",
+      "startDate": "2025-08-15",
+      "endDate": "2025-08-15",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $47 to $72",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 36,
+      "name": "Chmura + Duffrey",
+      "startDate": "2025-08-16",
+      "endDate": "2025-08-16",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $27.50 to $61",
+      "color": "bg-lime-200"
+    },
+    {
+      "id": 37,
+      "name": "Campfire Sessions: Alysia Kraft (AT RIVERSIDE COLORADO)",
+      "startDate": "2025-08-21",
+      "endDate": "2025-08-21",
+      "dayOfWeekStart": "Thursday",
+      "location": "Riverside Colorado",
+      "description": "Mishawaka Presents, All Ages, 7pm, $18",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 38,
+      "name": "The SteelDrivers – 20th Anniversary Tour (Night 1)",
+      "startDate": "2025-08-22",
+      "endDate": "2025-08-22",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "Presented by 105.5 The Colorado Sound, All Ages, 8pm, $40 to $72. Two-day pass available for $72",
+      "color": "bg-amber-200"
+    },
+    {
+      "id": 39,
+      "name": "The SteelDrivers – 20th Anniversary Tour (Night 2)",
+      "startDate": "2025-08-23",
+      "endDate": "2025-08-23",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "Presented by 105.5 The Colorado Sound, All Ages, 8pm, $47 to $77",
+      "color": "bg-amber-200"
+    },
+    {
+      "id": 40,
+      "name": "Uncle Lucius w/ The Point",
+      "startDate": "2025-08-30",
+      "endDate": "2025-08-30",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $38.50 to $66",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 41,
+      "name": "The Disco Biscuits: Between The Trees (Night 1)",
+      "startDate": "2025-09-05",
+      "endDate": "2025-09-05",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $83 to $227. Three-day pass available for $217 to $442",
+      "color": "bg-indigo-200"
+    },
+    {
+      "id": 42,
+      "name": "The Disco Biscuits: Between The Trees (Night 2)",
+      "startDate": "2025-09-06",
+      "endDate": "2025-09-06",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $83 to $227",
+      "color": "bg-indigo-200"
+    },
+    {
+      "id": 43,
+      "name": "The Disco Biscuits: Between The Trees (Night 3)",
+      "startDate": "2025-09-07",
+      "endDate": "2025-09-07",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 7pm, $83 to $227",
+      "color": "bg-indigo-200"
+    },
+    {
+      "id": 44,
+      "name": "Umphrey's McGee – Cruising Altitude 2025 Tour (Night 1)",
+      "startDate": "2025-09-12",
+      "endDate": "2025-09-12",
+      "dayOfWeekStart": "Friday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $94 to $147",
+      "color": "bg-teal-200"
+    },
+    {
+      "id": 45,
+      "name": "Umphrey's McGee – Cruising Altitude 2025 Tour (Night 2)",
+      "startDate": "2025-09-13",
+      "endDate": "2025-09-13",
+      "dayOfWeekStart": "Saturday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $94 to $147",
+      "color": "bg-teal-200"
+    },
+    {
+      "id": 46,
+      "name": "Umphrey's McGee – Cruising Altitude 2025 Tour (Night 3)",
+      "startDate": "2025-09-14",
+      "endDate": "2025-09-14",
+      "dayOfWeekStart": "Sunday",
+      "location": "Mishawaka Amphitheater, Bellvue, CO",
+      "description": "All Ages, 8pm, $94 to $147",
+      "color": "bg-teal-200"
+    },
+    {
+      "id": 47,
+      "name": "Campfire Sessions: Emma Rose (AT RIVERSIDE COLORADO)",
+      "startDate": "2025-09-25",
+      "endDate": "2025-09-25",
+      "dayOfWeekStart": "Thursday",
+      "location": "Riverside Colorado",
+      "description": "Mishawaka Presents, All Ages, 7pm, $18",
+      "color": "bg-orange-200"
+    }
+  ]
+} 

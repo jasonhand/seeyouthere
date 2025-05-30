@@ -1,0 +1,1429 @@
+{
+  "name": "Red Rocks Concerts 2025",
+  "description": "Complete 2025 concert schedule at Red Rocks Amphitheatre in Morrison, Colorado",
+  "enabled": true,
+  "color": "#28666E",
+  "icon": "🎸",
+  "events": [
+    {
+      "id": 1,
+      "name": "Lord Huron",
+      "startDate": "2025-05-29",
+      "endDate": "2025-05-29",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Lord Huron with Molly Lewis.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 2,
+      "name": "Michael Franti & Spearhead",
+      "startDate": "2025-05-30",
+      "endDate": "2025-05-30",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Michael Franti & Spearhead with Niko Moon.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 3,
+      "name": "Yoga on the Rocks – The River",
+      "startDate": "2025-05-31",
+      "endDate": "2025-05-31",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Morning yoga session at Red Rocks.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 4,
+      "name": "Ganja White Night",
+      "startDate": "2025-05-31",
+      "endDate": "2025-05-31",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Ganja White Night with LYNY, Mary Droppinz, Chef Boyarbeatz, Thred.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 5,
+      "name": "Peach Pit & Briston Maroney",
+      "startDate": "2025-06-01",
+      "endDate": "2025-06-01",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Peach Pit & Briston Maroney with BNNY.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 6,
+      "name": "Louis C.K.",
+      "startDate": "2025-06-02",
+      "endDate": "2025-06-02",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Louis C.K. comedy show.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 7,
+      "name": "Ryan Bingham and The Texas Gentlemen",
+      "startDate": "2025-06-03",
+      "endDate": "2025-06-03",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Ryan Bingham and The Texas Gentlemen.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 8,
+      "name": "Thievery Corporation",
+      "startDate": "2025-06-04",
+      "endDate": "2025-06-04",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Thievery Corporation with Beats Antique and Moontricks.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 9,
+      "name": "Brit Floyd",
+      "startDate": "2025-06-05",
+      "endDate": "2025-06-05",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Brit Floyd Pink Floyd tribute show.",
+      "color": "bg-indigo-200"
+    },
+    {
+      "id": 10,
+      "name": "Quinn XCII",
+      "startDate": "2025-06-06",
+      "endDate": "2025-06-06",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Quinn XCII with Wild Rivers and Mon Rovîa.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 11,
+      "name": "Yoga on the Rocks – The River",
+      "startDate": "2025-06-07",
+      "endDate": "2025-06-07",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Morning yoga session at Red Rocks.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 12,
+      "name": "Big Head Todd and the Monsters",
+      "startDate": "2025-06-07",
+      "endDate": "2025-06-07",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Big Head Todd and the Monsters with Cheap Trick and Cracker.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 13,
+      "name": "Big Head Todd and the Monsters",
+      "startDate": "2025-06-08",
+      "endDate": "2025-06-08",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Big Head Todd and the Monsters with Warren Haynes Band and Bill Murray and His Blood Brothers.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 14,
+      "name": "Film on The Rocks: 2001: A Space Odyssey",
+      "startDate": "2025-06-09",
+      "endDate": "2025-06-09",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Film screening with pre-show performances by Big Dopes and Al Jackson. Hosted by Janae Burris.",
+      "color": "bg-gray-200"
+    },
+    {
+      "id": 15,
+      "name": "Sheryl Crow",
+      "startDate": "2025-06-10",
+      "endDate": "2025-06-10",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Sheryl Crow with Larkin Poe.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 16,
+      "name": "Bloc Party",
+      "startDate": "2025-06-11",
+      "endDate": "2025-06-11",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Bloc Party with Blonde Redhead and Family Dinner.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 17,
+      "name": "Stick Figure",
+      "startDate": "2025-06-12",
+      "endDate": "2025-06-12",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Stick Figure with Stephen Marley and The Hip Abduction.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 18,
+      "name": "An Evening with James Taylor & His All-Star Band",
+      "startDate": "2025-06-13",
+      "endDate": "2025-06-13",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "James Taylor & His All-Star Band with Tiny Habits.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 19,
+      "name": "Yoga on the Rocks – The River",
+      "startDate": "2025-06-14",
+      "endDate": "2025-06-14",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Morning yoga session at Red Rocks.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 20,
+      "name": "An Evening with James Taylor & His All-Star Band",
+      "startDate": "2025-06-14",
+      "endDate": "2025-06-14",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "James Taylor & His All-Star Band with Tiny Habits (second night).",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 21,
+      "name": "Trevor Hall",
+      "startDate": "2025-06-15",
+      "endDate": "2025-06-15",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Trevor Hall with The Barr Brothers, Fruit Bats (Solo), and East Forest (DJ Set).",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 22,
+      "name": "Lindsey Stirling with the Colorado Symphony",
+      "startDate": "2025-06-16",
+      "endDate": "2025-06-16",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Lindsey Stirling with the Colorado Symphony.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 23,
+      "name": "Barenaked Ladies",
+      "startDate": "2025-06-17",
+      "endDate": "2025-06-17",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Barenaked Ladies with Guster and Fastball.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 24,
+      "name": "Alison Krauss & Union Station featuring Jerry Douglas",
+      "startDate": "2025-06-18",
+      "endDate": "2025-06-18",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Alison Krauss & Union Station featuring Jerry Douglas with Willie Watson.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 25,
+      "name": "Pierce The Veil",
+      "startDate": "2025-06-19",
+      "endDate": "2025-06-19",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Pierce The Veil with Sleeping With Sirens and Beach Weather.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 26,
+      "name": "Tash Sultana",
+      "startDate": "2025-06-20",
+      "endDate": "2025-06-20",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Tash Sultana solo performance.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 27,
+      "name": "Yoga on the Rocks – The River",
+      "startDate": "2025-06-21",
+      "endDate": "2025-06-21",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Morning yoga session at Red Rocks.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 28,
+      "name": "O.A.R.",
+      "startDate": "2025-06-21",
+      "endDate": "2025-06-21",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "O.A.R. with Blind Melon.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 29,
+      "name": "Halsey",
+      "startDate": "2025-06-22",
+      "endDate": "2025-06-22",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Halsey with Magdalena Bay and flowerolove.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 30,
+      "name": "Film on The Rocks: Pirates of the Caribbean",
+      "startDate": "2025-06-23",
+      "endDate": "2025-06-23",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Film screening of Pirates of the Caribbean: The Curse of the Black Pearl. Pre-show performances by The Martini Shot and Steve Gillespie. Hosted by Janae Burris.",
+      "color": "bg-gray-200"
+    },
+    {
+      "id": 31,
+      "name": "\"Weird Al\" Yankovic",
+      "startDate": "2025-06-24",
+      "endDate": "2025-06-24",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "\"Weird Al\" Yankovic with special guest Puddles Pity Party.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 32,
+      "name": "Charley Crockett",
+      "startDate": "2025-06-25",
+      "endDate": "2025-06-25",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Charley Crockett with Chaparelle and Rattlesnake Milk.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 33,
+      "name": "Dirty Heads",
+      "startDate": "2025-06-26",
+      "endDate": "2025-06-26",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Dirty Heads with Rome and Tropidelic.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 34,
+      "name": "Widespread Panic (3-Day Pass)",
+      "startDate": "2025-06-27",
+      "endDate": "2025-06-29",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Widespread Panic three-night run.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 35,
+      "name": "Yoga on the Rocks – The River",
+      "startDate": "2025-06-28",
+      "endDate": "2025-06-28",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Morning yoga session at Red Rocks.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 36,
+      "name": "Film on The Rocks: Willy Wonka",
+      "startDate": "2025-06-30",
+      "endDate": "2025-06-30",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Film screening of Willy Wonka and the Chocolate Factory (1971). Pre-show performances by School of Rock and Janae Burris. Hosted by Janae Burris.",
+      "color": "bg-gray-200"
+    },
+    {
+      "id": 37,
+      "name": "Dr. Dog",
+      "startDate": "2025-07-01",
+      "endDate": "2025-07-01",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Dr. Dog with Crumb.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 38,
+      "name": "ZEDS DEAD",
+      "startDate": "2025-07-02",
+      "endDate": "2025-07-03",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "ZEDS DEAD two-night run.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 39,
+      "name": "Blues Traveler",
+      "startDate": "2025-07-04",
+      "endDate": "2025-07-04",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Blues Traveler with Gin Blossoms and Spin Doctors.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 40,
+      "name": "Vulfpeck",
+      "startDate": "2025-07-05",
+      "endDate": "2025-07-05",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Vulfpeck with Arc De Soleil.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 41,
+      "name": "Jerry Garcia Symphonic Celebration",
+      "startDate": "2025-07-06",
+      "endDate": "2025-07-06",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Jerry Garcia Symphonic Celebration featuring Melvin Seals, Jacklyn LaBranch, Oteil Burbridge, Tom Hamilton, Duane Trucks and Lady Chi.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 42,
+      "name": "Film on The Rocks: Legally Blonde",
+      "startDate": "2025-07-07",
+      "endDate": "2025-07-07",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Film screening with pre-show performances by blankslate and Hannah Jones. Hosted by Janae Burris.",
+      "color": "bg-gray-200"
+    },
+    {
+      "id": 43,
+      "name": "Russ",
+      "startDate": "2025-07-08",
+      "endDate": "2025-07-08",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Russ with Big Sean and Sabrina Claudio.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 44,
+      "name": "PRIMUS – Onward & Upward Summer Tour",
+      "startDate": "2025-07-09",
+      "endDate": "2025-07-09",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "PRIMUS Onward & Upward Summer Tour 2025 with Ty Segall.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 45,
+      "name": "INCUBUS",
+      "startDate": "2025-07-10",
+      "endDate": "2025-07-10",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "INCUBUS with Manchester Orchestra and paris jackson.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 46,
+      "name": "The Avett Brothers",
+      "startDate": "2025-07-11",
+      "endDate": "2025-07-11",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "The Avett Brothers with Watchhouse.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 47,
+      "name": "Yoga on the Rocks – Better Buzz Yoga",
+      "startDate": "2025-07-12",
+      "endDate": "2025-07-12",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Morning yoga session at Red Rocks.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 48,
+      "name": "The Avett Brothers",
+      "startDate": "2025-07-12",
+      "endDate": "2025-07-12",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "The Avett Brothers with Homeboy Sandman.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 49,
+      "name": "The Avett Brothers",
+      "startDate": "2025-07-13",
+      "endDate": "2025-07-13",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "The Avett Brothers with Ani DiFranco.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 50,
+      "name": "ERIC CHURCH vs THE MACHINE",
+      "startDate": "2025-07-14",
+      "endDate": "2025-07-14",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Eric Church vs The Machine with special guest Stephen Wilson Jr.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 51,
+      "name": "ERIC CHURCH vs THE ECB",
+      "startDate": "2025-07-15",
+      "endDate": "2025-07-15",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Eric Church vs The ECB with special guest Stephen Wilson Jr.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 52,
+      "name": "ERIC CHURCH vs THE GUITAR",
+      "startDate": "2025-07-16",
+      "endDate": "2025-07-16",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Eric Church vs The Guitar with special guest Stephen Wilson Jr.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 53,
+      "name": "SLANDER Presents: CODE RED",
+      "startDate": "2025-07-17",
+      "endDate": "2025-07-17",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "SLANDER Presents: CODE RED with William Black b2b Blanke, Fairlane b2b Pauline Herr, Ivory b2b Perry Wayne, Nejvex.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 54,
+      "name": "The String Cheese Incident",
+      "startDate": "2025-07-18",
+      "endDate": "2025-07-18",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "The String Cheese Incident with The Wood Brothers.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 55,
+      "name": "Yoga on the Rocks – Better Buzz Yoga",
+      "startDate": "2025-07-19",
+      "endDate": "2025-07-19",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Morning yoga session at Red Rocks.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 56,
+      "name": "The String Cheese Incident",
+      "startDate": "2025-07-19",
+      "endDate": "2025-07-19",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "The String Cheese Incident with Daniel Donato's Cosmic Country.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 57,
+      "name": "Alabama Shakes",
+      "startDate": "2025-07-20",
+      "endDate": "2025-07-20",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Alabama Shakes with Lee Fields.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 58,
+      "name": "Mumford & Sons",
+      "startDate": "2025-07-21",
+      "endDate": "2025-07-21",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Mumford & Sons with Madison Cunningham.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 59,
+      "name": "Mumford & Sons",
+      "startDate": "2025-07-22",
+      "endDate": "2025-07-22",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Mumford & Sons with Madison Cunningham (second night).",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 60,
+      "name": "Something Corporate, Jack's Mannequin, Andrew McMahon in the Wilderness",
+      "startDate": "2025-07-23",
+      "endDate": "2025-07-23",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Something Corporate, Jack's Mannequin, Andrew McMahon in the Wilderness.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 61,
+      "name": "CAKE",
+      "startDate": "2025-07-24",
+      "endDate": "2025-07-24",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "CAKE alternative rock performance.",
+      "color": "bg-lime-200"
+    },
+    {
+      "id": 62,
+      "name": "Indigo Girls and Melissa Etheridge",
+      "startDate": "2025-07-25",
+      "endDate": "2025-07-25",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Indigo Girls and Melissa Etheridge.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 63,
+      "name": "Yoga on the Rocks – Better Buzz Yoga",
+      "startDate": "2025-07-26",
+      "endDate": "2025-07-26",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Morning yoga session at Red Rocks.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 64,
+      "name": "Cody Jinks",
+      "startDate": "2025-07-26",
+      "endDate": "2025-07-26",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Cody Jinks country music performance.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 65,
+      "name": "Beck with the Colorado Symphony",
+      "startDate": "2025-07-27",
+      "endDate": "2025-07-27",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Beck with the Colorado Symphony and support Molly Lewis.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 66,
+      "name": "Killer Queen",
+      "startDate": "2025-07-28",
+      "endDate": "2025-07-28",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Killer Queen Queen tribute band.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 67,
+      "name": "Bailey Zimmerman",
+      "startDate": "2025-07-29",
+      "endDate": "2025-07-29",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Bailey Zimmerman with Dylan Marlowe and Drew Baldridge.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 68,
+      "name": "The Marías – Submarine Tour (Extended)",
+      "startDate": "2025-07-30",
+      "endDate": "2025-07-30",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "The Marías – Submarine Tour (Extended) with julie.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 69,
+      "name": "Parker McCollum Tour",
+      "startDate": "2025-07-31",
+      "endDate": "2025-07-31",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Parker McCollum Tour with Kameron Marlowe and Hudson Westbrook.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 70,
+      "name": "Tedeschi Trucks Band",
+      "startDate": "2025-08-01",
+      "endDate": "2025-08-01",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Tedeschi Trucks Band with Grace Bowers & The Hodge Podge.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 71,
+      "name": "Yoga on the Rocks – Rooted Heart Yoga & Wellness",
+      "startDate": "2025-08-02",
+      "endDate": "2025-08-02",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Morning yoga session at Red Rocks.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 72,
+      "name": "Tedeschi Trucks Band",
+      "startDate": "2025-08-02",
+      "endDate": "2025-08-02",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Tedeschi Trucks Band with Grace Bowers & The Hodge Podge (second night).",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 73,
+      "name": "The Beach Boys with the Colorado Symphony",
+      "startDate": "2025-08-03",
+      "endDate": "2025-08-03",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "The Beach Boys with the Colorado Symphony and LOCASH.",
+      "color": "bg-cyan-200"
+    },
+    {
+      "id": 74,
+      "name": "ZZ Top",
+      "startDate": "2025-08-04",
+      "endDate": "2025-08-04",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "ZZ Top classic rock performance.",
+      "color": "bg-gray-200"
+    },
+    {
+      "id": 75,
+      "name": "K-LOVE Live at Red Rocks",
+      "startDate": "2025-08-05",
+      "endDate": "2025-08-05",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "K-LOVE Live at Red Rocks with Lauren Daigle, Tauren Wells, Ben Fuller, Josh Baldwin, Caleb & John.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 76,
+      "name": "K-LOVE Live at Red Rocks",
+      "startDate": "2025-08-06",
+      "endDate": "2025-08-06",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "K-LOVE Live at Red Rocks with Elevation Worship, CeCe Winans, Seph Schlueter, ELEVATION RHYTHM.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 77,
+      "name": "DISPATCH w/ John Butler (With Band) – Summer Tour 2025",
+      "startDate": "2025-08-07",
+      "endDate": "2025-08-07",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "DISPATCH w/ John Butler (With Band) – Summer Tour 2025 with Donavon Frankenreiter and Illiterate Light.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 78,
+      "name": "Joe Bonamassa",
+      "startDate": "2025-08-08",
+      "endDate": "2025-08-08",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Joe Bonamassa blues guitar performance.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 79,
+      "name": "Yoga on the Rocks – Rooted Heart Yoga & Wellness",
+      "startDate": "2025-08-09",
+      "endDate": "2025-08-09",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Morning yoga session at Red Rocks.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 80,
+      "name": "Slightly Stoopid",
+      "startDate": "2025-08-09",
+      "endDate": "2025-08-09",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Slightly Stoopid with Iration, Collie Buddz, and Little Stranger.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 81,
+      "name": "Gracie Abrams",
+      "startDate": "2025-08-11",
+      "endDate": "2025-08-11",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Gracie Abrams with ROLE MODEL.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 82,
+      "name": "Gracie Abrams",
+      "startDate": "2025-08-12",
+      "endDate": "2025-08-12",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Gracie Abrams with ROLE MODEL (second night).",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 83,
+      "name": "LCD Soundsystem",
+      "startDate": "2025-08-13",
+      "endDate": "2025-08-13",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "LCD Soundsystem with TV On The Radio.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 84,
+      "name": "Mt. Joy",
+      "startDate": "2025-08-14",
+      "endDate": "2025-08-14",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Mt. Joy with The Temper Trap.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 85,
+      "name": "My Morning Jacket",
+      "startDate": "2025-08-15",
+      "endDate": "2025-08-16",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "My Morning Jacket two-night run with Melt.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 86,
+      "name": "Film on The Rocks: Shrek 2",
+      "startDate": "2025-08-18",
+      "endDate": "2025-08-18",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Film screening with pre-show performances by Shrek Rave and Georgia Comstock. Hosted by Janae Burris.",
+      "color": "bg-gray-200"
+    },
+    {
+      "id": 87,
+      "name": "HEART",
+      "startDate": "2025-08-19",
+      "endDate": "2025-08-19",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "HEART with Todd Rundgren.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 88,
+      "name": "1964 The Tribute",
+      "startDate": "2025-08-21",
+      "endDate": "2025-08-21",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "1964 The Tribute Beatles tribute band.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 89,
+      "name": "Hippie Sabotage – Rescheduled",
+      "startDate": "2025-08-22",
+      "endDate": "2025-08-22",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Hippie Sabotage – Rescheduled with Two Feet and Kal Banx.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 90,
+      "name": "Reggae On The Rocks 2025",
+      "startDate": "2025-08-23",
+      "endDate": "2025-08-23",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Rebelution, SOJA, Tarrus Riley, Kabaka Pyramid, Rik Jam, Judge Roughneck.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 91,
+      "name": "Goo Goo Dolls",
+      "startDate": "2025-08-24",
+      "endDate": "2025-08-24",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Goo Goo Dolls with Dashboard Confessional.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 92,
+      "name": "Riley Green",
+      "startDate": "2025-08-25",
+      "endDate": "2025-08-25",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Riley Green with Ella Langley, Mike Ryan, Preston Cooper.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 93,
+      "name": "Teddy Swims",
+      "startDate": "2025-08-26",
+      "endDate": "2025-08-26",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Teddy Swims with Cian Ducrot.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 94,
+      "name": "Ray LaMontagne",
+      "startDate": "2025-08-27",
+      "endDate": "2025-08-27",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Ray LaMontagne with The Weather Station.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 95,
+      "name": "Sierra Ferrell",
+      "startDate": "2025-08-28",
+      "endDate": "2025-08-28",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Sierra Ferrell with Nikki Lane.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 96,
+      "name": "Little Big Town: Summer Tour 2025",
+      "startDate": "2025-08-29",
+      "endDate": "2025-08-29",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Little Big Town with Wynonna Judd and Shelby Lynne.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 97,
+      "name": "Chris Lake",
+      "startDate": "2025-08-30",
+      "endDate": "2025-08-30",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Chris Lake with Chris Lorenzo, Aluna, Marco Strous.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 98,
+      "name": "Gregory Alan Isakov",
+      "startDate": "2025-08-31",
+      "endDate": "2025-09-01",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Gregory Alan Isakov two-night run with Special Guest Leif Vollebekk.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 99,
+      "name": "PIXIES",
+      "startDate": "2025-09-02",
+      "endDate": "2025-09-02",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "PIXIES with special guests Spoon and Fazerdaze.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 100,
+      "name": "Billy Idol and Joan Jett & the Blackhearts",
+      "startDate": "2025-09-03",
+      "endDate": "2025-09-03",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Billy Idol and Joan Jett & the Blackhearts.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 101,
+      "name": "Jon Batiste",
+      "startDate": "2025-09-04",
+      "endDate": "2025-09-04",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Jon Batiste solo performance.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 102,
+      "name": "Brandi Carlile",
+      "startDate": "2025-09-05",
+      "endDate": "2025-09-07",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Brandi Carlile three-night run.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 103,
+      "name": "Rainbow Kitten Surprise",
+      "startDate": "2025-09-08",
+      "endDate": "2025-09-08",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Rainbow Kitten Surprise with Medium Build.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 104,
+      "name": "Ken Carson: The Lord of Chaos Tour",
+      "startDate": "2025-09-09",
+      "endDate": "2025-09-09",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Ken Carson: The Lord of Chaos Tour.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 105,
+      "name": "MANÁ: VIVIR SIN AIRE TOUR",
+      "startDate": "2025-09-10",
+      "endDate": "2025-09-11",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "MANÁ: VIVIR SIN AIRE TOUR two-night run.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 106,
+      "name": "Coheed and Cambria with Taking Back Sunday",
+      "startDate": "2025-09-12",
+      "endDate": "2025-09-12",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Coheed and Cambria with Taking Back Sunday and Foxing.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 107,
+      "name": "Greensky Bluegrass",
+      "startDate": "2025-09-13",
+      "endDate": "2025-09-13",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Greensky Bluegrass with Margo Price.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 108,
+      "name": "The Red Clay Strays",
+      "startDate": "2025-09-14",
+      "endDate": "2025-09-15",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "The Red Clay Strays two-night run with various supporting acts.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 109,
+      "name": "Get The Led Out",
+      "startDate": "2025-09-18",
+      "endDate": "2025-09-18",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Get The Led Out Led Zeppelin tribute.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 110,
+      "name": "Atmosphere & Friends",
+      "startDate": "2025-09-19",
+      "endDate": "2025-09-19",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Atmosphere & Friends with Hieroglyphics, Dilated Peoples, Living Legends, Immortal Technique, CunninLynguists, DeeJayBird.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 111,
+      "name": "Pulp – Here comes more",
+      "startDate": "2025-09-22",
+      "endDate": "2025-09-22",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Pulp – Here comes more tour.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 112,
+      "name": "Jordan Davis",
+      "startDate": "2025-09-24",
+      "endDate": "2025-09-24",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Jordan Davis with Mitchell Tenpenny and Vincent Mason.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 113,
+      "name": "Bonnie Raitt",
+      "startDate": "2025-09-25",
+      "endDate": "2025-09-25",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Bonnie Raitt with Jimmie Vaughan & The Tilt-A-Whirl Band.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 114,
+      "name": "Big Gigantic",
+      "startDate": "2025-09-27",
+      "endDate": "2025-09-27",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Big Gigantic with Maddy O'Neal.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 115,
+      "name": "Megan Moroney",
+      "startDate": "2025-09-30",
+      "endDate": "2025-09-30",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Megan Moroney with Patrick Droney.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 116,
+      "name": "Bert Kreischer",
+      "startDate": "2025-10-01",
+      "endDate": "2025-10-01",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Bert Kreischer comedy show.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 117,
+      "name": "AIR",
+      "startDate": "2025-10-02",
+      "endDate": "2025-10-02",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "AIR electronic music performance.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 118,
+      "name": "Madeon",
+      "startDate": "2025-10-03",
+      "endDate": "2025-10-03",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Madeon electronic music show.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 119,
+      "name": "BTSM Church At Red Rocks",
+      "startDate": "2025-10-05",
+      "endDate": "2025-10-05",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "BTSM Church At Red Rocks electronic show.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 120,
+      "name": "Conan Gray: The Wishbone Pajama Show",
+      "startDate": "2025-10-06",
+      "endDate": "2025-10-06",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Conan Gray: The Wishbone Pajama Show with Special Guest hemlocke springs.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 121,
+      "name": "Laufey",
+      "startDate": "2025-10-08",
+      "endDate": "2025-10-08",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Laufey with Suki Waterhouse.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 122,
+      "name": "The Revivalists",
+      "startDate": "2025-10-09",
+      "endDate": "2025-10-09",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "The Revivalists with Wilderado and Hans Williams.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 123,
+      "name": "Tape B",
+      "startDate": "2025-10-10",
+      "endDate": "2025-10-10",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Tape B with Cool Customer, MPH, STVSH, KNOW GOOD, Richard Finger.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 124,
+      "name": "Lane 8",
+      "startDate": "2025-10-11",
+      "endDate": "2025-10-11",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Lane 8 with Le Youth and Ashibah b2b Rinzen.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 125,
+      "name": "Carl Cox Evolution Live",
+      "startDate": "2025-10-13",
+      "endDate": "2025-10-13",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Carl Cox Evolution Live with Vintage Culture, ANNA, Bontan, The Bordas Brothers.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 126,
+      "name": "Lorde",
+      "startDate": "2025-10-14",
+      "endDate": "2025-10-14",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Lorde with Blood Orange and The Japanese House.",
+      "color": "bg-pink-200"
+    },
+    {
+      "id": 127,
+      "name": "Charles Wesley Godwin",
+      "startDate": "2025-10-15",
+      "endDate": "2025-10-15",
+      "dayOfWeekStart": "Wednesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Charles Wesley Godwin with Ole 60 and The Castellows.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 128,
+      "name": "Parcels",
+      "startDate": "2025-10-16",
+      "endDate": "2025-10-17",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Parcels two-night run.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 129,
+      "name": "Rezz 2-Day Pass",
+      "startDate": "2025-10-18",
+      "endDate": "2025-10-19",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Rezz 2-Day Pass with various supporting acts.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 130,
+      "name": "Flatland Cavalry",
+      "startDate": "2025-10-20",
+      "endDate": "2025-10-20",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Flatland Cavalry with Kaitlin Butts and Angel White.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 131,
+      "name": "Chris Tomlin",
+      "startDate": "2025-10-21",
+      "endDate": "2025-10-21",
+      "dayOfWeekStart": "Tuesday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Chris Tomlin Christian music concert.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 132,
+      "name": "Martin Garrix",
+      "startDate": "2025-10-23",
+      "endDate": "2025-10-24",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Martin Garrix two-night electronic music event.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 133,
+      "name": "Daily Bread",
+      "startDate": "2025-10-25",
+      "endDate": "2025-10-26",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Daily Bread two-night run with various supporting acts.",
+      "color": "bg-yellow-200"
+    },
+    {
+      "id": 134,
+      "name": "Zach Williams",
+      "startDate": "2025-10-27",
+      "endDate": "2025-10-27",
+      "dayOfWeekStart": "Monday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Zach Williams with We The Kingdom, Ben Fuller, Leanna Crawford.",
+      "color": "bg-green-200"
+    },
+    {
+      "id": 135,
+      "name": "Sub Focus & Dimension & Culture Shock & 1991",
+      "startDate": "2025-10-30",
+      "endDate": "2025-10-30",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Electronic music showcase with multiple artists.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 136,
+      "name": "Denzel Curry, Freddie Gibbs & Earl Sweatshirt",
+      "startDate": "2025-10-31",
+      "endDate": "2025-10-31",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Hip-hop Halloween show with Denzel Curry, Freddie Gibbs & Earl Sweatshirt.",
+      "color": "bg-orange-200"
+    },
+    {
+      "id": 137,
+      "name": "Galantis PRESENTS MIDSOMMAR – ALL HALLOWS",
+      "startDate": "2025-11-01",
+      "endDate": "2025-11-01",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Galantis with Dillon Francis, Forester, Sparkle.",
+      "color": "bg-blue-200"
+    },
+    {
+      "id": 138,
+      "name": "Apashe",
+      "startDate": "2025-11-02",
+      "endDate": "2025-11-02",
+      "dayOfWeekStart": "Sunday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Apashe with Flux Pavilion and Josh Teed.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 139,
+      "name": "deadmau5",
+      "startDate": "2025-11-07",
+      "endDate": "2025-11-08",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "deadmau5 two-night electronic music event.",
+      "color": "bg-purple-200"
+    },
+    {
+      "id": 140,
+      "name": "SVDDEN DEATH presents VOYD",
+      "startDate": "2025-11-13",
+      "endDate": "2025-11-13",
+      "dayOfWeekStart": "Thursday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "SVDDEN DEATH presents VOYD with Alice Glass, Simula, Witching Hour, Mythm, Executioner.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 141,
+      "name": "SVDDEN DEATH",
+      "startDate": "2025-11-14",
+      "endDate": "2025-11-14",
+      "dayOfWeekStart": "Friday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "SVDDEN DEATH with Zomboy, Prosecute, Nimda, Bejalvin, STVG.",
+      "color": "bg-red-200"
+    },
+    {
+      "id": 142,
+      "name": "Mau P",
+      "startDate": "2025-11-15",
+      "endDate": "2025-11-15",
+      "dayOfWeekStart": "Saturday",
+      "location": "Red Rocks Amphitheatre, Morrison, CO",
+      "description": "Mau P with Adam Beyer, ChaseWest, Decker Rush.",
+      "color": "bg-blue-200"
+    }
+  ]
+} 

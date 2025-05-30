@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Users, User, CheckCircle, Music, X, DollarSign } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, Users, User, CheckCircle, Music, X, DollarSign, Edit3, Palette, Download } from 'lucide-react';
 
 export default function GroupDateFinder() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -9,19 +9,61 @@ export default function GroupDateFinder() {
     dates: { [date: string]: boolean };
   };
 
+  // Group configuration type
+  type GroupConfig = {
+    name: string;
+    color: string;
+    bgColor: string;
+    borderColor: string;
+    textColor: string;
+  };
+
+  // Custom calendar types
+  type CustomEvent = {
+    id: number;
+    name: string;
+    startDate: string;
+    endDate: string;
+    dayOfWeekStart?: string;
+    location?: string;
+    description?: string;
+    color: string;
+    website?: string;
+    time?: string;
+    startTime?: string;
+    endTime?: string;
+  };
+
+  type CustomCalendar = {
+    name: string;
+    description: string;
+    enabled: boolean;
+    color: string;
+    icon?: string;
+    events: CustomEvent[];
+  };
+
   const [users, setUsers] = useState<User[]>([]);
   const [activeUser, setActiveUser] = useState<number | null>(null);
   const [currentUserName, setCurrentUserName] = useState('');
   const [showUserForm, setShowUserForm] = useState(true);
-  const [view, setView] = useState('calendar'); // 'calendar' or 'results'
+  const [view, setView] = useState<'calendar' | 'results' | 'split' | 'about'>('calendar');
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-  const [showMusicFestivals, setShowMusicFestivals] = useState(true);
   const [showControlPanel, setShowControlPanel] = useState(true);
   const [showUserModal, setShowUserModal] = useState(false);
   const [userPreferences, setUserPreferences] = useState<{ [userId: number]: Set<string> }>({});
-  const [festivalAttendance, setFestivalAttendance] = useState<{ [userId: number]: { [date: string]: string } }>({});
+  const [festivalAttendance, setFestivalAttendance] = useState<{ 
+    [userId: number]: { 
+      [date: string]: string | { [eventId: number]: string } 
+    } 
+  }>({});
   const [showFestivalPrompt, setShowFestivalPrompt] = useState(false);
   const [pendingFestivalDate, setPendingFestivalDate] = useState<string | null>(null);
+
+  // Custom calendar state
+  const [customCalendars, setCustomCalendars] = useState<CustomCalendar[]>([]);
+  const [enabledCalendars, setEnabledCalendars] = useState<Set<string>>(new Set());
+  const [loadingCalendars, setLoadingCalendars] = useState(true);
   
   // New state for sharing status and friend tracking
   const [isSharedSession, setIsSharedSession] = useState(false);
@@ -30,6 +72,31 @@ export default function GroupDateFinder() {
   const [showSharingModal, setShowSharingModal] = useState(false);
   const [sharingModalType, setSharingModalType] = useState<'new' | 'shared-with-data' | 'shared-no-data' | 'personal'>('new');
   const [hasSeenSharingModal, setHasSeenSharingModal] = useState(false);
+
+  // New state for group labeling and customization
+  const [groupConfig, setGroupConfig] = useState<GroupConfig>({
+    name: 'My Friends',
+    color: '#28666E',
+    bgColor: 'bg-[#28666E]',
+    borderColor: 'border-[#28666E]',
+    textColor: 'text-[#28666E]'
+  });
+  const [showGroupConfigModal, setShowGroupConfigModal] = useState(false);
+  const [tempGroupConfig, setTempGroupConfig] = useState<GroupConfig>(groupConfig);
+
+  // Predefined color themes for groups
+  const colorThemes = [
+    { name: 'Ocean Blue', color: '#28666E', bgColor: 'bg-[#28666E]', borderColor: 'border-[#28666E]', textColor: 'text-[#28666E]' },
+    { name: 'Forest Green', color: '#22C55E', bgColor: 'bg-green-500', borderColor: 'border-green-500', textColor: 'text-green-500' },
+    { name: 'Sunset Orange', color: '#F97316', bgColor: 'bg-orange-500', borderColor: 'border-orange-500', textColor: 'text-orange-500' },
+    { name: 'Royal Purple', color: '#8B5CF6', bgColor: 'bg-violet-500', borderColor: 'border-violet-500', textColor: 'text-violet-500' },
+    { name: 'Rose Pink', color: '#EC4899', bgColor: 'bg-pink-500', borderColor: 'border-pink-500', textColor: 'text-pink-500' },
+    { name: 'Sky Blue', color: '#0EA5E9', bgColor: 'bg-sky-500', borderColor: 'border-sky-500', textColor: 'text-sky-500' },
+    { name: 'Emerald', color: '#10B981', bgColor: 'bg-emerald-500', borderColor: 'border-emerald-500', textColor: 'text-emerald-500' },
+    { name: 'Amber', color: '#F59E0B', bgColor: 'bg-amber-500', borderColor: 'border-amber-500', textColor: 'text-amber-500' },
+    { name: 'Indigo', color: '#6366F1', bgColor: 'bg-indigo-500', borderColor: 'border-indigo-500', textColor: 'text-indigo-500' },
+    { name: 'Teal', color: '#14B8A6', bgColor: 'bg-teal-500', borderColor: 'border-teal-500', textColor: 'text-teal-500' }
+  ];
 
   // Load data from localStorage and URL on component mount
   useEffect(() => {
@@ -42,6 +109,12 @@ export default function GroupDateFinder() {
         const loadedUsers = parsedData.users || [];
         setUsers(loadedUsers);
         setIsSharedSession(true);
+        
+        // Load group configuration from shared data if available
+        if (parsedData.groupConfig) {
+          setGroupConfig(parsedData.groupConfig);
+          setTempGroupConfig(parsedData.groupConfig);
+        }
         
         // Identify friends who have data (users with unavailable dates or preferences)
         const friendsWithAvailabilityData = loadedUsers
@@ -113,6 +186,25 @@ export default function GroupDateFinder() {
       setShowUserForm(false);
     }
   }, []);
+
+  // Load group configuration from localStorage
+  useEffect(() => {
+    const savedGroupConfig = localStorage.getItem('seeYouThere_groupConfig');
+    if (savedGroupConfig) {
+      try {
+        const config = JSON.parse(savedGroupConfig);
+        setGroupConfig(config);
+        setTempGroupConfig(config);
+      } catch (error) {
+        console.error('Error loading group configuration:', error);
+      }
+    }
+  }, []);
+
+  // Save group configuration to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('seeYouThere_groupConfig', JSON.stringify(groupConfig));
+  }, [groupConfig]);
 
   // Update friends with data when users change
   useEffect(() => {
@@ -222,7 +314,10 @@ export default function GroupDateFinder() {
 
   // Generate shareable URL
   const generateShareableURL = () => {
-    const data = { users };
+    const data = { 
+      users,
+      groupConfig 
+    };
     const encodedData = encodeURIComponent(JSON.stringify(data));
     const baseURL = window.location.origin + window.location.pathname;
     return `${baseURL}?data=${encodedData}`;
@@ -235,8 +330,8 @@ export default function GroupDateFinder() {
       
       // Show success message with sharing tips
       const message = friendsWithData.length > 0 
-        ? `✅ Shareable URL copied! This includes data from: ${friendsWithData.join(', ')}`
-        : '✅ Shareable URL copied! Share this with friends so they can add their availability.';
+        ? `✅ ${groupConfig.name} calendar copied! This includes data from: ${friendsWithData.join(', ')}`
+        : `✅ ${groupConfig.name} calendar copied! Share this with friends so they can add their availability.`;
       
       alert(message);
       
@@ -249,9 +344,87 @@ export default function GroupDateFinder() {
       // Fallback: show URL in prompt
       const url = generateShareableURL();
       const message = friendsWithData.length > 0 
-        ? `Copy this URL to share (includes data from ${friendsWithData.join(', ')}): `
-        : 'Copy this URL to share with friends: ';
+        ? `Copy this URL to share ${groupConfig.name} calendar (includes data from ${friendsWithData.join(', ')}): `
+        : `Copy this URL to share ${groupConfig.name} calendar with friends: `;
       prompt(message, url);
+    }
+  };
+
+  // Generate Google Calendar invite link
+  const generateGoogleCalendarLink = (dateStr: string, isMultiDay: boolean = false, endDateStr?: string, timeOfDay?: 'morning' | 'afternoon' | 'evening', specificTime?: string) => {
+    let startHour = 12; // Default to noon
+    let startMinute = 0;
+    
+    // Set time based on time of day selection
+    if (timeOfDay && specificTime) {
+      const [hours, minutes] = specificTime.split(':').map(Number);
+      startHour = hours;
+      startMinute = minutes;
+    } else if (timeOfDay) {
+      // Default times for each period
+      switch (timeOfDay) {
+        case 'morning':
+          startHour = 10;
+          break;
+        case 'afternoon':
+          startHour = 14; // 2 PM
+          break;
+        case 'evening':
+          startHour = 18; // 6 PM
+          break;
+      }
+    }
+    
+    const startDate = new Date(dateStr + 'T12:00:00');
+    startDate.setHours(startHour, startMinute, 0, 0);
+    
+    const endDate = endDateStr ? new Date(endDateStr + 'T12:00:00') : new Date(startDate);
+    
+    // If single day event, make it 2 hours long
+    if (!isMultiDay) {
+      endDate.setTime(startDate.getTime() + (2 * 60 * 60 * 1000)); // Add 2 hours
+    } else {
+      // For multi-day events, set end time to end of day
+      endDate.setHours(23, 59, 59);
+    }
+    
+    const formatDateForGoogle = (date: Date) => {
+      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+    
+    const startTime = formatDateForGoogle(startDate);
+    const endTime = formatDateForGoogle(endDate);
+    
+    const title = encodeURIComponent(`${groupConfig.name} Meetup`);
+    const timeInfo = timeOfDay ? ` (${timeOfDay}${specificTime ? ` at ${specificTime}` : ''})` : '';
+    const details = encodeURIComponent(
+      `Group meetup planned via See Ya There!${timeInfo}\n\n` +
+      `Attendees: ${users.map(u => u.name).join(', ')}\n\n` +
+      `This date works for everyone in the group. Looking forward to seeing you there!`
+    );
+    
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startTime}/${endTime}&details=${details}`;
+    
+    return googleCalendarUrl;
+  };
+
+  // Download calendar invite for best dates
+  const downloadCalendarInvites = () => {
+    const bestDates = getUnmarkedDaysWithinPeriod(30).slice(0, 5); // Get top 5 best dates in next 30 days
+    
+    if (bestDates.length === 0) {
+      alert(`No available dates found in the next 30 days where everyone in ${groupConfig.name} is free.`);
+      return;
+    }
+    
+    // Create a summary of all the best dates
+    const datesList = bestDates.map(date => formatDateForDisplay(date)).join(', ');
+    const message = `Found ${bestDates.length} great dates for ${groupConfig.name}:\n\n${datesList}\n\nClick OK to open Google Calendar for the first available date, or check the Results page for all options.`;
+    
+    if (confirm(message)) {
+      // Open Google Calendar for the first best date
+      const calendarLink = generateGoogleCalendarLink(bestDates[0]);
+      window.open(calendarLink, '_blank');
     }
   };
 
@@ -287,6 +460,11 @@ export default function GroupDateFinder() {
   const getCurrentUserPreferences = (): Set<string> => {
     if (activeUser === null) return new Set();
     return userPreferences[activeUser] || new Set();
+  };
+
+  // Check if current user has made any preferred choices
+  const hasCurrentUserMadePreferences = (): boolean => {
+    return getCurrentUserPreferences().size > 0;
   };
 
   // Get preference count for a date across all users
@@ -346,29 +524,110 @@ export default function GroupDateFinder() {
     setPendingFestivalDate(null);
   };
 
+  // Handle multi-event decision for specific events
+  const handleMultiEventDecision = (eventId: number, decision: 'attending' | 'not-attending') => {
+    if (!pendingFestivalDate || activeUser === null) return;
+    
+    // Mark the date as unavailable if not already done
+    const newUsers = users.map(user => {
+      if (user.id === activeUser) {
+        return {
+          ...user,
+          dates: {
+            ...user.dates,
+            [pendingFestivalDate]: true
+          }
+        };
+      }
+      return user;
+    });
+    setUsers(newUsers);
+    
+    // Record specific event attendance
+    setFestivalAttendance(prev => {
+      const userAttendance = prev[activeUser] || {};
+      const dateAttendance = userAttendance[pendingFestivalDate];
+      
+      // If this is the first event decision for this date, initialize with event-specific tracking
+      let newDateAttendance;
+      if (typeof dateAttendance === 'string') {
+        // Convert from simple string to event-specific object
+        newDateAttendance = { [eventId]: decision };
+      } else if (typeof dateAttendance === 'object' && dateAttendance !== null) {
+        // Update existing event-specific tracking
+        newDateAttendance = { ...dateAttendance as Record<number, string>, [eventId]: decision };
+      } else {
+        // Initialize new event-specific tracking
+        newDateAttendance = { [eventId]: decision };
+      }
+      
+      return {
+        ...prev,
+        [activeUser]: {
+          ...userAttendance,
+          [pendingFestivalDate]: newDateAttendance
+        }
+      };
+    });
+    
+    // Note: Removed automatic modal closing - user now uses "Done" button to finish
+  };
+
   // Get festival attendees for a specific date
   const getFestivalAttendees = (dateStr: string) => {
-    return users.filter(user => 
-      festivalAttendance[user.id]?.[dateStr] === 'attending'
-    );
+    return users.filter(user => {
+      const attendance = festivalAttendance[user.id]?.[dateStr];
+      if (typeof attendance === 'string') {
+        return attendance === 'attending';
+      } else if (typeof attendance === 'object' && attendance !== null) {
+        // Check if user is attending any event on this date
+        return Object.values(attendance).some(status => status === 'attending');
+      }
+      return false;
+    });
+  };
+
+  // Get attendees for a specific event
+  const getEventAttendees = (dateStr: string, eventId: number) => {
+    return users.filter(user => {
+      const attendance = festivalAttendance[user.id]?.[dateStr];
+      if (typeof attendance === 'object' && attendance !== null) {
+        return attendance[eventId] === 'attending';
+      }
+      return false;
+    });
+  };
+
+  // Check if current user is attending a specific event
+  const isUserAttendingEvent = (dateStr: string, eventId: number) => {
+    if (!activeUser) return false;
+    const attendance = festivalAttendance[activeUser]?.[dateStr];
+    if (typeof attendance === 'object' && attendance !== null) {
+      return attendance[eventId] === 'attending';
+    }
+    return false;
   };
 
   // Get festivals the current user is attending
   const getCurrentUserFestivals = () => {
-    if (!activeUser || !showMusicFestivals) return [];
+    if (!activeUser || enabledCalendars.size === 0) return [];
     
     const userAttendance = festivalAttendance[activeUser] || {};
-    const attendingFestivals = [];
+    const attendingFestivals: Array<{
+      festival: CustomEvent;
+      attendingDates: string[];
+      otherAttendees: string[];
+    }> = [];
     
     // Go through each festival and check if user is attending any dates
-    festivals.forEach(festival => {
+    getAllEnabledEvents().forEach(festival => {
       const startDate = new Date(festival.startDate + 'T12:00:00');
       const endDate = new Date(festival.endDate + 'T12:00:00');
       const currentDate = new Date(startDate);
       
       let isAttending = false;
-      const attendingDates = [];
-      const otherAttendees = new Set();
+      const attendingDates: string[] = [];
+      const otherAttendees = new Set<string>();
       
       // Check each day of the festival
       while (currentDate <= endDate) {
@@ -607,12 +866,18 @@ export default function GroupDateFinder() {
   const getEventsForDate = (dateStr: string | number | Date) => {
     if (!dateStr) return [];
     
-    return festivals.filter(festival => {
-      const startDate = new Date(festival.startDate + 'T12:00:00');
-      const endDate = new Date(festival.endDate + 'T12:00:00');
-      const currentDate = new Date(dateStr);
+    // Convert the input to a standardized date string (YYYY-MM-DD)
+    const targetDateStr = typeof dateStr === 'string' ? dateStr : formatDate(new Date(dateStr));
+    
+    const events = getAllEnabledEvents();
+    return events.filter(event => {
+      // For single-day events, check if the target date matches the event date
+      if (event.startDate === event.endDate) {
+        return targetDateStr === event.startDate;
+      }
       
-      return currentDate >= startDate && currentDate <= endDate;
+      // For multi-day events, check if the target date is within the range
+      return targetDateStr >= event.startDate && targetDateStr <= event.endDate;
     });
   };
   
@@ -646,14 +911,14 @@ export default function GroupDateFinder() {
     for (let i = 1; i <= daysInMonth; i++) {
       const currentDate = new Date(year, month, i);
       const dateStr = formatDate(currentDate);
-      const festivalsOnDay = showMusicFestivals ? getEventsForDate(dateStr) : [];
+      const eventsOnDay = enabledCalendars.size > 0 ? getEventsForDate(dateStr) : [];
       
       const currentUser = users.find(u => u.id === activeUser);
       days.push({ 
         day: i, 
         date: dateStr,
         isUnavailable: currentUser?.dates[dateStr] === true,
-        festivals: showMusicFestivals ? festivalsOnDay : [],
+        festivals: enabledCalendars.size > 0 ? eventsOnDay : [],
         holidays: getHolidaysForDate(dateStr),
         isToday: isToday(dateStr),
         isPreferred: getCurrentUserPreferences().has(dateStr)
@@ -677,14 +942,14 @@ export default function GroupDateFinder() {
     const currentUser = users.find(u => u.id === activeUser);
     const isCurrentlyMarked = currentUser?.dates[dateStr as string] === true;
     
-    // If marking a date as unavailable and it's a festival date, prompt for clarification
-    if (!isCurrentlyMarked && showMusicFestivals && isDateWithinFestival(dateStr as string)) {
+    // If marking a date as unavailable and it's an event date, prompt for clarification
+    if (!isCurrentlyMarked && enabledCalendars.size > 0 && isDateWithinFestival(dateStr as string)) {
       setPendingFestivalDate(dateStr as string);
       setShowFestivalPrompt(true);
       return;
     }
     
-    // Regular toggle for non-festival dates or when unmarking
+    // Regular toggle for non-event dates or when unmarking
     const newUsers = users.map(user => {
       if (user.id === activeUser) {
         return {
@@ -702,13 +967,15 @@ export default function GroupDateFinder() {
     
     // Clear festival attendance if unmarking a date
     if (isCurrentlyMarked && festivalAttendance[activeUser]?.[dateStr as string]) {
-      setFestivalAttendance(prev => ({
-        ...prev,
-        [activeUser]: {
-          ...prev[activeUser],
-          [dateStr as string]: undefined
+      setFestivalAttendance(prev => {
+        const newAttendance = { ...prev };
+        if (newAttendance[activeUser]) {
+          const userAttendance = { ...newAttendance[activeUser] };
+          delete userAttendance[dateStr as string];
+          newAttendance[activeUser] = userAttendance;
         }
-      }));
+        return newAttendance;
+      });
     }
     
     // Remove from preferred dates if marking as unavailable
@@ -870,19 +1137,23 @@ export default function GroupDateFinder() {
 
   // Get festival meetups where people are actually attending
   const getFestivalMeetups = () => {
-    if (users.length === 0) return [];
+    if (users.length === 0 || enabledCalendars.size === 0) return [];
     
-    const festivalMeetups = [];
+    const festivalMeetups: Array<{
+      date: string;
+      attendees: User[];
+      festival: CustomEvent;
+    }> = [];
     
-    festivals.forEach(festival => {
-      const startDate = new Date(festival.startDate + 'T12:00:00');
-      const endDate = new Date(festival.endDate + 'T12:00:00');
+    getAllEnabledEvents().forEach(event => {
+      const startDate = new Date(event.startDate + 'T12:00:00');
+      const endDate = new Date(event.endDate + 'T12:00:00');
       const currentDate = new Date(startDate);
       
       while (currentDate <= endDate) {
         const dateStr = formatDate(currentDate);
         
-        // Get users who are actually attending this festival
+        // Get users who are actually attending this event
         const attendees = getFestivalAttendees(dateStr);
         
         // Only include if at least 2 people are attending
@@ -890,7 +1161,7 @@ export default function GroupDateFinder() {
           festivalMeetups.push({
             date: dateStr,
             attendees,
-            festival: festival
+            festival: event
           });
         }
         
@@ -1021,7 +1292,7 @@ export default function GroupDateFinder() {
         className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
         onClick={handleBackdropClick}
       >
-        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4 relative">
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4 relative max-h-[90vh] overflow-y-auto">
           <button
             onClick={() => setShowUserModal(false)}
             className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
@@ -1029,36 +1300,61 @@ export default function GroupDateFinder() {
             <X className="h-5 w-5" />
           </button>
           
-          <h2 className="text-xl font-bold mb-4 text-center">User Management</h2>
+          <h2 className="text-xl font-bold mb-6 text-center">Group Management</h2>
           
-          {/* Current Users */}
-          {users.length > 0 ? (
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-700 mb-3">Current Users:</h3>
-              <div className="flex flex-wrap gap-2">
-                {users.map(user => (
-                  <button
-                    key={user.id}
-                    onClick={() => {
-                      handleUserSubmit(user.name);
-                      setShowUserModal(false);
-                    }}
-                    className={`
-                      px-3 py-2 text-sm rounded-lg cursor-pointer hover:opacity-80 transition-opacity
-                      ${user.name === currentUserName ? 'bg-[#033F63] text-white' : 'bg-[#FEDC97] text-[#033F63]'}
-                    `}
-                  >
-                    {user.name}
-                    {user.name === currentUserName && <span className="ml-1">•</span>}
-                  </button>
-                ))}
+          {/* Group Configuration Section */}
+          <div className="mb-6 p-4 rounded-lg border-2" style={{ borderColor: groupConfig.color + '40', backgroundColor: groupConfig.color + '10' }}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-medium text-gray-700">Group Settings</h3>
+              <Palette className="h-5 w-5" style={{ color: groupConfig.color }} />
+            </div>
+            
+            {/* Group Name Display and Customize Button */}
+            <button
+              onClick={() => setShowGroupConfigModal(true)}
+              className="w-full p-3 rounded-lg border border-gray-200 hover:bg-white/50 transition-colors text-left mb-4"
+            >
+              <div 
+                className="px-4 py-2 rounded-lg text-white font-medium text-center mb-2"
+                style={{ backgroundColor: groupConfig.color }}
+              >
+                {groupConfig.name}
               </div>
+              <p className="text-xs text-gray-600 text-center">
+                Click to customize your group name and colors
+              </p>
+            </button>
+            
+            {/* Group Members */}
+            <div>
+              <h4 className="text-sm font-medium text-gray-700 mb-3">Group Members ({users.length}):</h4>
+              {users.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {users.map(user => (
+                    <button
+                      key={user.id}
+                      onClick={() => {
+                        handleUserSubmit(user.name);
+                        setShowUserModal(false);
+                      }}
+                      className={`
+                        px-3 py-2 text-sm rounded-lg cursor-pointer hover:opacity-80 transition-opacity
+                        ${user.name === currentUserName ? 'text-white' : 'text-white'}
+                      `}
+                      style={{ 
+                        backgroundColor: user.name === currentUserName ? groupConfig.color : '#B5B682'
+                      }}
+                    >
+                      {user.name}
+                      {user.name === currentUserName && <span className="ml-1">•</span>}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center text-sm">No group members yet. Create the first user to get started!</p>
+              )}
             </div>
-          ) : (
-            <div className="mb-6">
-              <p className="text-gray-500 text-center">No users yet. Create the first user to get started!</p>
-            </div>
-          )}
+          </div>
 
           {/* Action Buttons */}
           <div className="flex flex-col gap-3">
@@ -1067,9 +1363,10 @@ export default function GroupDateFinder() {
                 setShowUserForm(true);
                 setShowUserModal(false);
               }}
-              className="w-full px-4 py-3 bg-[#7C9885] text-white rounded-lg hover:bg-[#28666E] flex items-center justify-center font-medium"
+              className="w-full px-4 py-3 text-white rounded-lg hover:opacity-80 flex items-center justify-center font-medium"
+              style={{ backgroundColor: '#7C9885' }}
             >
-              <User className="mr-2 h-4 w-4" /> Create New User
+              <User className="mr-2 h-4 w-4" /> Add Group Member
             </button>
             
             <button
@@ -1077,9 +1374,16 @@ export default function GroupDateFinder() {
                 setShowResetConfirm(true);
                 setShowUserModal(false);
               }}
-              className="w-full px-4 py-3 bg-[#28666E] text-white rounded-lg hover:bg-[#033F63] flex items-center justify-center font-medium"
+              className="w-full px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center justify-center font-medium"
             >
               <X className="mr-2 h-4 w-4" /> Reset All Data
+            </button>
+            
+            <button
+              onClick={() => setShowUserModal(false)}
+              className="w-full px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center font-medium"
+            >
+              OK
             </button>
           </div>
         </div>
@@ -1092,46 +1396,168 @@ export default function GroupDateFinder() {
     if (!pendingFestivalDate) return null;
     
     const festivalEvents = getEventsForDate(pendingFestivalDate);
-    const festivalName = festivalEvents[0]?.name || 'Music Festival';
+    
+    // If only one event, use the existing simple flow
+    if (festivalEvents.length === 1) {
+      const festivalName = festivalEvents[0]?.name || 'Music Festival';
+      
+      return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
+            <h3 className="text-lg font-bold mb-4 text-center">Event Date Detected! 🎵</h3>
+            <p className="text-gray-600 mb-4 text-center">
+              You're marking <strong>{formatDateForDisplay(pendingFestivalDate)}</strong> as unavailable, and we noticed there's an event happening:
+            </p>
+            <div className="bg-yellow-50 p-3 rounded-lg mb-6 text-center">
+              <div className="font-medium text-yellow-800">{festivalName}</div>
+              {festivalEvents[0]?.location && (
+                <div className="text-sm text-yellow-600">{festivalEvents[0].location}</div>
+              )}
+            </div>
+            <p className="text-gray-600 mb-6 text-center text-sm">
+              Are you attending this event, or are you busy with something else?
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => handleFestivalDecision('attending')}
+                className="w-full px-4 py-3 bg-[#28666E] text-white rounded-lg hover:bg-[#7C9885] flex items-center justify-center font-medium"
+              >
+                🎵 I'm attending this event!
+              </button>
+              <button
+                onClick={() => handleFestivalDecision('busy')}
+                className="w-full px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center font-medium"
+              >
+                📅 I'm busy with something else
+              </button>
+              <button
+                onClick={() => {
+                  setShowFestivalPrompt(false);
+                  setPendingFestivalDate(null);
+                }}
+                className="w-full px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Multiple events - show selection interface
+    // Get current user's decisions for this date
+    const currentAttendance = activeUser ? festivalAttendance[activeUser]?.[pendingFestivalDate] : null;
+    const userDecisions = typeof currentAttendance === 'object' && currentAttendance !== null ? currentAttendance : {};
+    const hasAnyDecisions = Object.keys(userDecisions).length > 0;
     
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4">
-          <h3 className="text-lg font-bold mb-4 text-center">Festival Date Detected! 🎵</h3>
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <h3 className="text-lg font-bold mb-4 text-center">Multiple Events Detected! 🎵</h3>
           <p className="text-gray-600 mb-4 text-center">
-            You're marking <strong>{formatDateForDisplay(pendingFestivalDate)}</strong> as unavailable, and we noticed there's a music festival happening:
+            You're marking <strong>{formatDateForDisplay(pendingFestivalDate)}</strong> as unavailable, and we noticed there are <strong>{festivalEvents.length} events</strong> happening:
           </p>
-          <div className="bg-yellow-50 p-3 rounded-lg mb-6 text-center">
-            <div className="font-medium text-yellow-800">{festivalName}</div>
-            {festivalEvents[0]?.location && (
-              <div className="text-sm text-yellow-600">{festivalEvents[0].location}</div>
-            )}
+          
+          <div className="space-y-3 mb-6 max-h-60 overflow-y-auto">
+            {festivalEvents.map((event, index) => {
+              const userDecision = userDecisions[event.id];
+              const hasDecision = userDecision !== undefined;
+              const isAttending = userDecision === 'attending';
+              const isNotAttending = userDecision === 'not-attending';
+              
+              return (
+                <div key={event.id} className={`p-3 rounded-lg border ${
+                  hasDecision 
+                    ? isAttending 
+                      ? 'bg-green-50 border-green-200' 
+                      : 'bg-gray-50 border-gray-200'
+                    : 'bg-yellow-50 border-yellow-200'
+                }`}>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-800 flex items-center gap-2">
+                        {event.name}
+                        {hasDecision && (
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            isAttending 
+                              ? 'bg-green-100 text-green-700' 
+                              : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {isAttending ? '✓ Attending' : '✗ Not Going'}
+                          </span>
+                        )}
+                      </div>
+                      {event.location && (
+                        <div className="text-sm text-gray-600">{event.location}</div>
+                      )}
+                      {event.time && (
+                        <div className="text-sm text-gray-600">{event.time}</div>
+                      )}
+                      {event.description && (
+                        <div className="text-xs text-gray-600 mt-1">{event.description}</div>
+                      )}
+                    </div>
+                    <div className="ml-3 flex flex-col gap-2">
+                      <button
+                        onClick={() => handleMultiEventDecision(event.id, 'attending')}
+                        className={`px-3 py-1 text-sm rounded whitespace-nowrap transition-colors ${
+                          isAttending
+                            ? 'bg-green-600 text-white'
+                            : 'bg-[#28666E] text-white hover:bg-[#7C9885]'
+                        }`}
+                      >
+                        🎵 Attending
+                      </button>
+                      <button
+                        onClick={() => handleMultiEventDecision(event.id, 'not-attending')}
+                        className={`px-3 py-1 text-sm rounded whitespace-nowrap transition-colors ${
+                          isNotAttending
+                            ? 'bg-gray-600 text-white'
+                            : 'bg-gray-400 text-white hover:bg-gray-500'
+                        }`}
+                      >
+                        ❌ Not Going
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <p className="text-gray-600 mb-6 text-center text-sm">
-            Are you attending this festival, or are you busy with something else?
-          </p>
-          <div className="flex flex-col gap-3">
-            <button
-              onClick={() => handleFestivalDecision('attending')}
-              className="w-full px-4 py-3 bg-[#28666E] text-white rounded-lg hover:bg-[#7C9885] flex items-center justify-center font-medium"
-            >
-              🎵 I'm attending this festival!
-            </button>
-            <button
-              onClick={() => handleFestivalDecision('busy')}
-              className="w-full px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center font-medium"
-            >
-              📅 I'm busy with something else
-            </button>
-            <button
-              onClick={() => {
-                setShowFestivalPrompt(false);
-                setPendingFestivalDate(null);
-              }}
-              className="w-full px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              Cancel
-            </button>
+          
+          <div className="border-t pt-4">
+            <p className="text-gray-600 mb-4 text-center text-sm">
+              Select which events you're attending, or mark yourself as busy with something else entirely.
+            </p>
+            <div className="flex flex-col gap-3">
+              {hasAnyDecisions && (
+                <button
+                  onClick={() => {
+                    setShowFestivalPrompt(false);
+                    setPendingFestivalDate(null);
+                  }}
+                  className="w-full px-4 py-3 bg-[#28666E] text-white rounded-lg hover:bg-[#7C9885] flex items-center justify-center font-medium"
+                >
+                  ✓ Done with my selections
+                </button>
+              )}
+              <button
+                onClick={() => handleFestivalDecision('busy')}
+                className="w-full px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 flex items-center justify-center font-medium"
+              >
+                📅 I'm busy with something else (not attending any events)
+              </button>
+              <button
+                onClick={() => {
+                  setShowFestivalPrompt(false);
+                  setPendingFestivalDate(null);
+                }}
+                className="w-full px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -1164,15 +1590,336 @@ export default function GroupDateFinder() {
     </div>
   );
 
+  // Group Configuration Modal
+  const GroupConfigModal = () => {
+    const [localGroupName, setLocalGroupName] = useState(tempGroupConfig.name);
+    const [localColorConfig, setLocalColorConfig] = useState({
+      color: tempGroupConfig.color,
+      bgColor: tempGroupConfig.bgColor,
+      borderColor: tempGroupConfig.borderColor,
+      textColor: tempGroupConfig.textColor
+    });
+
+    const handleBackdropClick = (e: React.MouseEvent) => {
+      if (e.target === e.currentTarget) {
+        setShowGroupConfigModal(false);
+        setTempGroupConfig(groupConfig); // Reset temp config
+      }
+    };
+
+    const handleSave = () => {
+      const newConfig = {
+        name: localGroupName,
+        ...localColorConfig
+      };
+      setGroupConfig(newConfig);
+      setTempGroupConfig(newConfig);
+      setShowGroupConfigModal(false);
+    };
+
+    const handleCancel = () => {
+      setTempGroupConfig(groupConfig); // Reset to current config
+      setShowGroupConfigModal(false);
+    };
+
+    const selectColorTheme = (theme: typeof colorThemes[0]) => {
+      setLocalColorConfig({
+        color: theme.color,
+        bgColor: theme.bgColor,
+        borderColor: theme.borderColor,
+        textColor: theme.textColor
+      });
+    };
+
+    return (
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        onClick={handleBackdropClick}
+      >
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 relative max-h-[90vh] overflow-y-auto">
+          <button
+            onClick={handleCancel}
+            className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          
+          <h2 className="text-xl font-bold mb-6 text-center flex items-center justify-center gap-2">
+            <Palette className="h-6 w-6" />
+            Customize Your Group
+          </h2>
+          
+          {/* Group Name */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Group Name
+            </label>
+            <input
+              type="text"
+              value={localGroupName}
+              onChange={(e) => setLocalGroupName(e.target.value)}
+              placeholder="Enter group name (e.g., VictorOps Friends, Bluegrass Fam)"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              maxLength={50}
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              This will appear in calendar invites and sharing messages
+            </p>
+          </div>
+
+          {/* Color Theme Selection */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Choose Color Theme
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              {colorThemes.map((theme, index) => (
+                <button
+                  key={index}
+                  onClick={() => selectColorTheme(theme)}
+                  className={`p-3 rounded-lg border-2 transition-all hover:scale-105 ${
+                    localColorConfig.color === theme.color 
+                      ? 'border-gray-800 ring-2 ring-gray-300' 
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                  style={{ backgroundColor: theme.color + '20' }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div 
+                      className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
+                      style={{ backgroundColor: theme.color }}
+                    ></div>
+                    <div className="text-left">
+                      <div className="font-medium text-sm text-gray-800">{theme.name}</div>
+                      <div className="text-xs text-gray-600">{theme.color}</div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Preview */}
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            <h4 className="text-sm font-medium text-gray-700 mb-3">Preview</h4>
+            <div className="space-y-2">
+              <div 
+                className="px-4 py-2 rounded-lg text-white font-medium text-center"
+                style={{ backgroundColor: localColorConfig.color }}
+              >
+                {localGroupName || 'Group Name'} Calendar
+              </div>
+              <div className="text-xs text-gray-600 text-center">
+                This is how your group will appear in the app
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3">
+            <button
+              onClick={handleCancel}
+              className="flex-1 px-4 py-3 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              className="flex-1 px-4 py-3 text-white rounded-lg hover:opacity-90 font-medium"
+              style={{ backgroundColor: localColorConfig.color }}
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Time Selection Modal
+  const TimeSelectionModal = () => {
+    const handleBackdropClick = (e: React.MouseEvent) => {
+      if (e.target === e.currentTarget) {
+        setShowTimeModal(false);
+        setSelectedTimeOfDay(null);
+        setSelectedSpecificTime('');
+      }
+    };
+
+    const handleTimeOfDaySelect = (timeOfDay: 'morning' | 'afternoon' | 'evening') => {
+      setSelectedTimeOfDay(timeOfDay);
+      // Set default times
+      switch (timeOfDay) {
+        case 'morning':
+          setSelectedSpecificTime('10:00');
+          break;
+        case 'afternoon':
+          setSelectedSpecificTime('14:00');
+          break;
+        case 'evening':
+          setSelectedSpecificTime('18:00');
+          break;
+      }
+    };
+
+    const handleCreateInvite = () => {
+      if (selectedDateForTime && selectedTimeOfDay) {
+        const calendarLink = generateGoogleCalendarLink(
+          selectedDateForTime, 
+          false, 
+          undefined, 
+          selectedTimeOfDay, 
+          selectedSpecificTime
+        );
+        window.open(calendarLink, '_blank');
+        setShowTimeModal(false);
+        setSelectedTimeOfDay(null);
+        setSelectedSpecificTime('');
+        setSelectedDateForTime(null);
+      }
+    };
+
+    const formatTimeDisplay = (time: string) => {
+      if (!time) return '';
+      const [hours, minutes] = time.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+      return `${displayHour}:${minutes} ${ampm}`;
+    };
+
+    return (
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        onClick={handleBackdropClick}
+      >
+        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4 relative">
+          <button
+            onClick={() => {
+              setShowTimeModal(false);
+              setSelectedTimeOfDay(null);
+              setSelectedSpecificTime('');
+            }}
+            className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          
+          <h2 className="text-xl font-bold mb-6 text-center">
+            Choose Meeting Time
+          </h2>
+          
+          {selectedDateForTime && (
+            <div className="mb-6 p-3 bg-gray-50 rounded-lg text-center">
+              <div className="font-medium text-gray-800">
+                {formatDateForDisplay(selectedDateForTime)}
+              </div>
+              <div className="text-sm text-gray-600">
+                {groupConfig.name} Meetup
+              </div>
+            </div>
+          )}
+
+          {/* Time of Day Selection */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Choose time of day:
+            </label>
+            <div className="grid grid-cols-3 gap-3">
+              <button
+                onClick={() => handleTimeOfDaySelect('morning')}
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  selectedTimeOfDay === 'morning'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                <div className="text-2xl mb-2">🌅</div>
+                <div className="font-medium text-sm">Morning</div>
+                <div className="text-xs text-gray-500">8 AM-12 PM</div>
+              </button>
+              
+              <button
+                onClick={() => handleTimeOfDaySelect('afternoon')}
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  selectedTimeOfDay === 'afternoon'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                <div className="text-2xl mb-2">☀️</div>
+                <div className="font-medium text-sm">Afternoon</div>
+                <div className="text-xs text-gray-500">12 PM - 6 PM</div>
+              </button>
+              
+              <button
+                onClick={() => handleTimeOfDaySelect('evening')}
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  selectedTimeOfDay === 'evening'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                <div className="text-2xl mb-2">🌙</div>
+                <div className="font-medium text-sm">Evening</div>
+                <div className="text-xs text-gray-500">6 PM - 11 PM</div>
+              </button>
+            </div>
+          </div>
+
+          {/* Specific Time Selection */}
+          {selectedTimeOfDay && (
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Choose specific time:
+              </label>
+              <input
+                type="time"
+                value={selectedSpecificTime}
+                onChange={(e) => setSelectedSpecificTime(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {selectedSpecificTime && (
+                <div className="mt-2 text-sm text-gray-600 text-center">
+                  Meeting time: {formatTimeDisplay(selectedSpecificTime)}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex gap-3">
+            <button
+              onClick={() => {
+                setShowTimeModal(false);
+                setSelectedTimeOfDay(null);
+                setSelectedSpecificTime('');
+              }}
+              className="flex-1 px-4 py-3 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleCreateInvite}
+              disabled={!selectedTimeOfDay}
+              className="flex-1 px-4 py-3 text-white rounded-lg hover:opacity-90 font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+              style={{ 
+                backgroundColor: selectedTimeOfDay ? groupConfig.color : undefined 
+              }}
+            >
+              <Download className="mr-2 h-4 w-4 inline" />
+              Create Invite
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // About page component
   const AboutPage = () => (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow">
       <div className="text-center mb-8">
-        <img 
-          src="/logo.png" 
-          alt="See Ya There Logo" 
-          className="h-32 w-auto object-contain mx-auto mb-4"
-        />
         <h1 className="text-3xl font-bold text-[#033F63] mb-2">See Ya There</h1>
         <p className="text-lg text-gray-600">Group Date Planning Made Simple</p>
       </div>
@@ -1400,6 +2147,114 @@ export default function GroupDateFinder() {
     );
   };
 
+  // New state for time selection
+  const [showTimeModal, setShowTimeModal] = useState(false);
+  const [selectedDateForTime, setSelectedDateForTime] = useState<string | null>(null);
+  const [selectedTimeOfDay, setSelectedTimeOfDay] = useState<'morning' | 'afternoon' | 'evening' | null>(null);
+  const [selectedSpecificTime, setSelectedSpecificTime] = useState<string>('');
+
+  // New state for inline time selection in favorite dates
+  const [showInlineTimeSelection, setShowInlineTimeSelection] = useState(false);
+  const [inlineSelectedTimeOfDay, setInlineSelectedTimeOfDay] = useState<'morning' | 'afternoon' | 'evening' | null>(null);
+  const [inlineSelectedSpecificTime, setInlineSelectedSpecificTime] = useState<string>('');
+
+  // Load custom calendars from JSON files
+  const loadCustomCalendars = async () => {
+    try {
+      setLoadingCalendars(true);
+      
+      // Load the manifest file to get list of available calendars
+      let calendarFiles: string[] = [];
+      
+      try {
+        const manifestResponse = await fetch('/custom-calendars/manifest.json');
+        if (manifestResponse.ok) {
+          const manifest = await manifestResponse.json();
+          calendarFiles = manifest.calendars || [];
+        }
+      } catch (error) {
+        console.warn('Could not load calendar manifest, falling back to default list');
+        // Fallback to known calendar files if manifest doesn't exist
+        calendarFiles = [
+          'music-festivals-2025.json',
+          'red-rocks-2025.json', 
+          'dillon-amphitheater-2025.json',
+        ];
+      }
+      
+      const calendars: CustomCalendar[] = [];
+      const enabledSet = new Set<string>();
+      
+      for (const file of calendarFiles) {
+        try {
+          const response = await fetch(`/custom-calendars/${file}`);
+          if (response.ok) {
+            const calendar: CustomCalendar = await response.json();
+            calendars.push(calendar);
+            
+            // Add to enabled set if calendar is enabled by default
+            if (calendar.enabled) {
+              enabledSet.add(calendar.name);
+            }
+          }
+        } catch (error) {
+          // Silently skip files that don't exist or can't be loaded
+          console.debug(`Calendar file ${file} not found or invalid`);
+        }
+      }
+      
+      setCustomCalendars(calendars);
+      setEnabledCalendars(enabledSet);
+      
+      // Load saved calendar preferences from localStorage
+      const savedPreferences = localStorage.getItem('seeYouThere_enabledCalendars');
+      if (savedPreferences) {
+        try {
+          const saved = JSON.parse(savedPreferences);
+          setEnabledCalendars(new Set(saved));
+        } catch (error) {
+          console.warn('Failed to load calendar preferences:', error);
+          // Keep the default enabled state if localStorage parsing fails
+        }
+      }
+      // If no saved preferences, keep the default enabled state from JSON files
+      
+    } catch (error) {
+      console.error('Failed to load custom calendars:', error);
+    } finally {
+      setLoadingCalendars(false);
+    }
+  };
+
+  // Get all events from enabled calendars
+  const getAllEnabledEvents = (): CustomEvent[] => {
+    return customCalendars
+      .filter(calendar => enabledCalendars.has(calendar.name))
+      .flatMap(calendar => calendar.events);
+  };
+
+  // Toggle calendar enabled state
+  const toggleCalendar = (calendarName: string) => {
+    setEnabledCalendars(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(calendarName)) {
+        newSet.delete(calendarName);
+      } else {
+        newSet.add(calendarName);
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('seeYouThere_enabledCalendars', JSON.stringify(Array.from(newSet)));
+      
+      return newSet;
+    });
+  };
+
+  // Load custom calendars on component mount
+  useEffect(() => {
+    loadCustomCalendars();
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen pt-0 px-2 sm:px-4 pb-2 sm:pb-4 bg-gray-50">
       {showUserForm && <UserForm />}
@@ -1407,6 +2262,8 @@ export default function GroupDateFinder() {
       {showFestivalPrompt && <FestivalPrompt />}
       {showResetConfirm && <ResetConfirmDialog />}
       {showSharingModal && <SharingStatusModal />}
+      {showGroupConfigModal && <GroupConfigModal />}
+      {showTimeModal && <TimeSelectionModal />}
       
       <div className="mb-0">
         {/* Logo header */}
@@ -1414,7 +2271,7 @@ export default function GroupDateFinder() {
           <img 
             src="/logo.png" 
             alt="See Ya There Logo" 
-            className="h-44 sm:h-56 w-auto object-contain"
+            className="h-32 sm:h-44 md:h-56 w-auto object-contain"
           />
         </div>
         
@@ -1431,64 +2288,48 @@ export default function GroupDateFinder() {
         )}
 
         {/* Main Navigation - Always visible */}
-        <div className="bg-white p-3 rounded-lg shadow-sm border mb-4">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="bg-white p-4 rounded-lg shadow-sm border mb-4">
+          <div className="grid grid-cols-2 gap-3 mb-4">
             <button 
-              className={`px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors ${view === 'calendar' ? 'bg-[#033F63] text-white' : 'bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885] hover:text-white'}`}
+              className={`px-4 py-4 text-sm sm:text-base rounded-xl flex items-center justify-center font-medium min-h-[52px] transition-all active:scale-95 ${
+                view === 'calendar' 
+                  ? 'text-white shadow-lg' 
+                  : `text-white hover:opacity-80`
+              }`}
+              style={{ 
+                backgroundColor: view === 'calendar' ? groupConfig.color : '#B5B682'
+              }}
               onClick={() => setView('calendar')}
             >
-              <Calendar className="mr-2 h-4 w-4" /> Calendar
+              <Calendar className="mr-2 h-4 w-4" /> 
+              <span className="hidden sm:inline">Calendar</span>
+              <span className="sm:hidden">Cal</span>
             </button>
             <button 
-              className={`px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors ${view === 'results' ? 'bg-[#033F63] text-white' : 'bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885] hover:text-white'}`}
+              className={`px-4 py-4 text-sm sm:text-base rounded-xl flex items-center justify-center font-medium min-h-[52px] transition-all active:scale-95 ${
+                view === 'results' 
+                  ? 'text-white shadow-lg' 
+                  : `text-white hover:opacity-80`
+              }`}
+              style={{ 
+                backgroundColor: view === 'results' ? groupConfig.color : '#B5B682'
+              }}
               onClick={() => setView('results')}
             >
               <CheckCircle className="mr-2 h-4 w-4" /> Results
             </button>
-            <button 
-              className="px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors bg-[#B5B682] text-[#033F63] hover:bg-[#7C9885] hover:text-white"
-              onClick={() => window.open('https://color-coded-budget-buddy.lovable.app/', '_blank')}
-              title="Split costs with your group using Split Sumthin"
-            >
-              <DollarSign className="mr-1 h-4 w-4" /> Split Costs
-            </button>
-            <button
-              onClick={copyShareableURL}
-              className={`px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors ${
-                users.length > 0 
-                  ? 'bg-[#28666E] text-white hover:bg-[#7C9885]' 
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-              disabled={users.length === 0}
-            >
-              <Users className="mr-2 h-4 w-4" /> Share
-            </button>
           </div>
           
-          {/* Users button - full width on second row */}
-          <div className="grid grid-cols-1 gap-3 mt-3">
-            <button
-              onClick={() => setShowUserModal(true)}
-              className="px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors bg-[#7C9885] text-white hover:bg-[#28666E]"
-            >
-              <Users className="mr-2 h-4 w-4" /> Users
-            </button>
-          </div>
+          {/* Group Management Button */}
+          <button
+            onClick={() => setShowUserModal(true)}
+            className="w-full px-4 py-4 text-sm sm:text-base rounded-xl flex items-center justify-center font-medium min-h-[52px] transition-all active:scale-95 text-white hover:opacity-80"
+            style={{ backgroundColor: '#7C9885' }}
+          >
+            <Users className="mr-2 h-4 w-4" /> Group Management
+          </button>
         </div>
 
-        {/* Music Festival Toggle - Below navigation buttons */}
-        <div className="flex justify-center mb-4">
-          <label className="flex items-center gap-2 cursor-pointer px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
-            <input
-              type="checkbox"
-              checked={showMusicFestivals}
-              onChange={(e) => setShowMusicFestivals(e.target.checked)}
-              className="w-3 h-3 text-[#28666E] bg-gray-100 border-gray-300 rounded focus:ring-[#28666E] focus:ring-1"
-            />
-            <Music className="h-3 w-3 text-[#28666E]" />
-            <span className="text-xs font-medium text-gray-600">Music Festivals</span>
-          </label>
-        </div>
       </div>
 
       {/* Sharing Status Modal */}
@@ -1499,21 +2340,33 @@ export default function GroupDateFinder() {
         <>
           <div className="mb-4 p-4 bg-white rounded-lg shadow">
             <div className="flex justify-between items-center mb-4">
-                            <button                 onClick={prevMonth}                className="p-2 rounded-full hover:bg-[#FEDC97]"              >
+              <button 
+                onClick={prevMonth}
+                className="p-3 rounded-full hover:bg-[#FEDC97] active:bg-[#28666E] active:text-white transition-all"
+              >
                 <ChevronLeft className="h-5 w-5" />
               </button>
-              <h2 className="text-xl font-semibold">
-                {getMonthName(currentMonth)} {currentMonth.getFullYear()}
-              </h2>
-                            <button                 onClick={nextMonth}                className="p-2 rounded-full hover:bg-[#FEDC97]"              >
+              <div className="text-center">
+                <h2 className="text-lg sm:text-xl font-semibold">
+                  {getMonthName(currentMonth)} {currentMonth.getFullYear()}
+                </h2>
+                <div className="text-xs sm:text-sm font-normal mt-1" style={{ color: groupConfig.color }}>
+                  {groupConfig.name} Calendar
+                </div>
+              </div>
+              <button 
+                onClick={nextMonth}
+                className="p-3 rounded-full hover:bg-[#FEDC97] active:bg-[#28666E] active:text-white transition-all"
+              >
                 <ChevronRight className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="grid grid-cols-7 gap-1 mb-2 text-center">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                <div key={day} className="font-medium text-gray-500 text-xs sm:text-sm">
-                  {day}
+            <div className="grid grid-cols-7 gap-1 mb-3 text-center">
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
+                <div key={day} className="font-medium text-gray-500 text-sm py-2">
+                  <span className="hidden sm:inline">{day}</span>
+                  <span className="sm:hidden">{['S', 'M', 'T', 'W', 'T', 'F', 'S'][index]}</span>
                 </div>
               ))}
             </div>
@@ -1530,8 +2383,8 @@ export default function GroupDateFinder() {
                     ...(day.festivals && day.festivals.length > 0 ? day.festivals.map(f => `🎵 ${f.name}${f.location ? ` - ${f.location}` : ''}`) : [])
                   ].join('\n') || undefined}
                   className={`
-                    h-10 sm:h-12 flex flex-col items-center justify-center rounded-lg cursor-pointer relative text-xs sm:text-sm
-                    ${!day.day ? 'text-[#B5B682]' : 'hover:bg-[#FEDC97]'}
+                    h-12 sm:h-14 flex flex-col items-center justify-center rounded-lg cursor-pointer relative text-sm sm:text-base
+                    ${!day.day ? 'text-[#B5B682]' : 'hover:bg-[#FEDC97] active:bg-[#28666E] active:text-white'}
                     ${day.isUnavailable ? 'bg-red-200 text-red-800 font-medium' : ''}
                     ${day.isPreferred ? 'ring-2 ring-[#FEDC97] ring-offset-1' : ''}
                     ${day.festivals && day.festivals.length > 0 ? 'border-2 border-dashed border-[#28666E]' : ''}
@@ -1570,48 +2423,33 @@ export default function GroupDateFinder() {
         </>
       )}
 
-      {/* Music Festivals Legend - Only show in Calendar view */}
+      {/* Action Buttons - Show below Calendar */}
       {view === 'calendar' && (
-        <div className="mb-4 p-3 bg-white rounded-lg shadow">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium flex items-center text-sm sm:text-base">
-              <Music className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#033F63]" /> Music Festivals
-            </h3>
-            <button
-              onClick={() => setShowMusicFestivals(!showMusicFestivals)}
-              className="p-1 rounded-md hover:bg-[#FEDC97] transition-colors"
-              title={showMusicFestivals ? 'Hide festivals' : 'Show festivals'}
+        <div className="mb-4 p-4 bg-white rounded-lg shadow">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button 
+              className="px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors text-white hover:opacity-80"
+              style={{ backgroundColor: '#B5B682' }}
+              onClick={() => window.open('https://color-coded-budget-buddy.lovable.app/', '_blank')}
+              title="Split costs with your group using Split Sumthin"
             >
-              {showMusicFestivals ? (
-                <ChevronUp className="h-4 w-4 text-[#28666E]" />
-              ) : (
-                <ChevronDown className="h-4 w-4 text-[#28666E]" />
-              )}
+              <DollarSign className="mr-1 h-4 w-4" /> Split Costs
+            </button>
+            <button
+              onClick={copyShareableURL}
+              className={`px-4 py-3 text-sm rounded-lg flex items-center justify-center font-medium min-h-[48px] transition-colors text-white ${
+                users.length > 0 
+                  ? 'hover:opacity-80' 
+                  : 'opacity-50 cursor-not-allowed'
+              }`}
+              style={{ backgroundColor: users.length > 0 ? groupConfig.color : '#9CA3AF' }}
+              disabled={users.length === 0}
+            >
+              <Users className="mr-2 h-4 w-4" /> Share
             </button>
           </div>
-          {showMusicFestivals && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-              {festivals.map(festival => (
-                <div 
-                  key={festival.id}
-                  className={`px-2 sm:px-3 py-2 rounded-md ${festival.color} cursor-pointer hover:opacity-80 transition-opacity`}
-                  onClick={() => {
-                    const festivalDate = new Date(festival.startDate + 'T12:00:00');
-                    setCurrentMonth(new Date(festivalDate.getFullYear(), festivalDate.getMonth(), 1));
-                  }}
-                >
-                  <div className="font-medium text-xs sm:text-sm">{festival.name}</div>
-                  <div className="text-xs text-gray-600 mt-1">
-                    {new Date(festival.startDate + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - 
-                    {new Date(festival.endDate + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       )}
-
 
       {/* Results View */}
       {view === 'results' && (
@@ -1631,6 +2469,24 @@ export default function GroupDateFinder() {
                   <h3 className="font-medium mb-4 flex items-center text-sm sm:text-base">
                     <span className="mr-2">🏆</span> Group's Favorite Dates
                   </h3>
+                  
+                  {/* User Preference Status */}
+                  {!hasCurrentUserMadePreferences() && currentUserName && (
+                    <div className="mb-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                      <div className="flex items-center gap-2">
+                        <span className="text-orange-600">⚠️</span>
+                        <div>
+                          <div className="text-sm font-medium text-orange-800">
+                            {currentUserName}, you haven't chosen your preferred dates yet!
+                          </div>
+                          <div className="text-xs text-orange-600 mt-1">
+                            Star your favorite dates on the calendar to help the group find the best meetup times.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
                   <div className="bg-yellow-50 p-4 rounded-lg">
                     <div className="text-sm text-yellow-700 mb-3">
                       Dates ranked by how many people chose them as preferred
@@ -1638,14 +2494,9 @@ export default function GroupDateFinder() {
                     <div className="space-y-2">
                       {getMostPreferredDates().map((preference, index) => (
                         <div key={index} className="px-3 py-2 bg-white rounded border border-yellow-200">
-                          <div className="flex justify-between items-center">
-                            <div className="flex-1">
-                              <div className="font-medium text-sm">{formatDateForDisplay(preference.date)}</div>
-                              <div className="text-xs text-yellow-600">
-                                {showMusicFestivals && isDateWithinFestival(preference.date) ? '🎵 Festival day' : 'Meetup day'}
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
+                          <div className="space-y-2">
+                            {/* User preference count and stars - moved to top */}
+                            <div className="flex items-center justify-between">
                               <div className="text-sm font-medium text-yellow-700">
                                 {preference.count} of {users.length} {preference.count === 1 ? 'person' : 'people'}
                               </div>
@@ -1667,6 +2518,153 @@ export default function GroupDateFinder() {
                                 })}
                               </div>
                             </div>
+                            
+                            {/* Date and type information */}
+                            <div>
+                              <div className="font-medium text-sm">{formatDateForDisplay(preference.date)}</div>
+                              <div className="text-xs text-yellow-600">
+                                {enabledCalendars.size > 0 && isDateWithinFestival(preference.date) ? '🎵 Event day' : 'Meetup day'}
+                              </div>
+                            </div>
+                            
+                            {/* Calendar invite link for the top date where everyone agrees */}
+                            {index === 0 && preference.count === users.length && (
+                              <div className="border-t border-yellow-200 pt-3">
+                                <div className="text-xs font-medium text-yellow-800 mb-3">
+                                  🎯 Perfect Meetup Day! Choose your meeting time:
+                                </div>
+                                
+                                {!showInlineTimeSelection ? (
+                                  <button
+                                    onClick={() => setShowInlineTimeSelection(true)}
+                                    className="text-xs px-3 py-2 rounded-lg text-white hover:opacity-80 transition-colors flex items-center gap-1"
+                                    style={{ backgroundColor: groupConfig.color }}
+                                  >
+                                    <Download className="h-3 w-3" />
+                                    Choose Meeting Time
+                                  </button>
+                                ) : (
+                                  <div className="space-y-3">
+                                    {/* Time of Day Selection */}
+                                    <div>
+                                      <div className="text-xs font-medium text-gray-700 mb-2">Time of day:</div>
+                                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                        <button
+                                          onClick={() => {
+                                            setInlineSelectedTimeOfDay('morning');
+                                            setInlineSelectedSpecificTime('10:00');
+                                          }}
+                                          className={`p-3 rounded-lg border text-xs transition-all ${
+                                            inlineSelectedTimeOfDay === 'morning'
+                                              ? 'border-blue-500 bg-blue-50 text-blue-700'
+                                              : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                          }`}
+                                        >
+                                          <div className="text-xl mb-1">🌅</div>
+                                          <div className="font-medium">Morning</div>
+                                          <div className="text-xs text-gray-500">8 AM-12 PM</div>
+                                        </button>
+                                        
+                                        <button
+                                          onClick={() => {
+                                            setInlineSelectedTimeOfDay('afternoon');
+                                            setInlineSelectedSpecificTime('14:00');
+                                          }}
+                                          className={`p-3 rounded-lg border text-xs transition-all ${
+                                            inlineSelectedTimeOfDay === 'afternoon'
+                                              ? 'border-blue-500 bg-blue-50 text-blue-700'
+                                              : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                          }`}
+                                        >
+                                          <div className="text-xl mb-1">☀️</div>
+                                          <div className="font-medium">Afternoon</div>
+                                          <div className="text-xs text-gray-500">12 PM - 6 PM</div>
+                                        </button>
+                                        
+                                        <button
+                                          onClick={() => {
+                                            setInlineSelectedTimeOfDay('evening');
+                                            setInlineSelectedSpecificTime('18:00');
+                                          }}
+                                          className={`p-3 rounded-lg border text-xs transition-all ${
+                                            inlineSelectedTimeOfDay === 'evening'
+                                              ? 'border-blue-500 bg-blue-50 text-blue-700'
+                                              : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                          }`}
+                                        >
+                                          <div className="text-xl mb-1">🌙</div>
+                                          <div className="font-medium">Evening</div>
+                                          <div className="text-xs text-gray-500">6 PM - 11 PM</div>
+                                        </button>
+                                      </div>
+                                    </div>
+
+                                    {/* Specific Time Selection */}
+                                    {inlineSelectedTimeOfDay && (
+                                      <div>
+                                        <div className="text-xs font-medium text-gray-700 mb-2">Specific time:</div>
+                                        <input
+                                          type="time"
+                                          value={inlineSelectedSpecificTime}
+                                          onChange={(e) => setInlineSelectedSpecificTime(e.target.value)}
+                                          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                        />
+                                        {inlineSelectedSpecificTime && (
+                                          <div className="mt-1 text-xs text-gray-600">
+                                            Meeting time: {(() => {
+                                              const [hours, minutes] = inlineSelectedSpecificTime.split(':');
+                                              const hour = parseInt(hours);
+                                              const ampm = hour >= 12 ? 'PM' : 'AM';
+                                              const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+                                              return `${displayHour}:${minutes} ${ampm}`;
+                                            })()}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+
+                                    {/* Action Buttons */}
+                                    <div className="flex gap-2">
+                                      <button
+                                        onClick={() => {
+                                          setShowInlineTimeSelection(false);
+                                          setInlineSelectedTimeOfDay(null);
+                                          setInlineSelectedSpecificTime('');
+                                        }}
+                                        className="flex-1 px-3 py-2 text-xs text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+                                      >
+                                        Cancel
+                                      </button>
+                                      <button
+                                        onClick={() => {
+                                          if (inlineSelectedTimeOfDay) {
+                                            const calendarLink = generateGoogleCalendarLink(
+                                              preference.date, 
+                                              false, 
+                                              undefined, 
+                                              inlineSelectedTimeOfDay, 
+                                              inlineSelectedSpecificTime
+                                            );
+                                            window.open(calendarLink, '_blank');
+                                            setShowInlineTimeSelection(false);
+                                            setInlineSelectedTimeOfDay(null);
+                                            setInlineSelectedSpecificTime('');
+                                          }
+                                        }}
+                                        disabled={!inlineSelectedTimeOfDay}
+                                        className="flex-1 px-3 py-2 text-xs text-white rounded-lg hover:opacity-90 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-1"
+                                        style={{ 
+                                          backgroundColor: inlineSelectedTimeOfDay ? groupConfig.color : undefined 
+                                        }}
+                                      >
+                                        <Download className="h-3 w-3" />
+                                        Create Invite
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -1693,7 +2691,7 @@ export default function GroupDateFinder() {
                           <div>
                             <div className="font-medium text-sm">{formatDateForDisplay(dateStr)}</div>
                             <div className="text-xs text-blue-600">
-                              {showMusicFestivals && isDateWithinFestival(dateStr) ? '🎵 Festival day' : 'Meetup day'}
+                              {enabledCalendars.size > 0 && isDateWithinFestival(dateStr) ? '🎵 Event day' : 'Meetup day'}
                             </div>
                             <div className="text-xs text-gray-500">
                               {getPreferenceCount(dateStr)} {getPreferenceCount(dateStr) === 1 ? 'person likes' : 'people like'} this
@@ -1718,6 +2716,24 @@ export default function GroupDateFinder() {
                 <h3 className="font-medium mb-4 flex items-center text-sm sm:text-base">
                   <CheckCircle className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#7C9885]" /> Availability Summary
                 </h3>
+                
+                {/* User Preference Reminder */}
+                {!hasCurrentUserMadePreferences() && currentUserName && (
+                  <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <span className="text-blue-600">💡</span>
+                      <div>
+                        <div className="text-sm font-medium text-blue-800">
+                          Tip: Star your preferred dates on the calendar
+                        </div>
+                        <div className="text-xs text-blue-600 mt-1">
+                          Help your group by marking which available dates work best for you!
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                   {/* 10 Days Summary */}
                   <div 
@@ -1791,16 +2807,16 @@ export default function GroupDateFinder() {
                 </div>
 
                 {/* Festival Summary */}
-                {showMusicFestivals && getFestivalMeetups().length > 0 && (
+                {enabledCalendars.size > 0 && getFestivalMeetups().length > 0 && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
                       <div className="text-center">
                         <div className="text-xl sm:text-2xl font-bold text-yellow-600 mb-1">
                           {getFestivalMeetups().length}
                         </div>
-                        <div className="text-sm font-medium text-yellow-700">Festival Opportunities</div>
+                        <div className="text-sm font-medium text-yellow-700">Event Opportunities</div>
                         <div className="text-xs text-yellow-600 mt-1">
-                          music festival {getFestivalMeetups().length === 1 ? 'meetup' : 'meetups'}
+                          event {getFestivalMeetups().length === 1 ? 'meetup' : 'meetups'}
                         </div>
                       </div>
                     </div>
@@ -1836,7 +2852,7 @@ export default function GroupDateFinder() {
                             <div className="flex-1">
                               <div className="font-medium text-sm">{formatDateForDisplay(dateStr)}</div>
                               <div className="text-xs text-green-600">All {users.length} available</div>
-                              {showMusicFestivals && isDateWithinFestival(dateStr) && (
+                              {enabledCalendars.size > 0 && isDateWithinFestival(dateStr) && (
                                 <div className="mt-1 flex items-center">
                                   <Music className="h-3 w-3 mr-1 text-[#28666E]" />
                                   <span className="text-xs text-[#033F63] truncate">
@@ -1884,7 +2900,7 @@ export default function GroupDateFinder() {
                             <div className="flex-1">
                               <div className="font-medium text-sm">{formatDateForDisplay(dateStr)}</div>
                               <div className="text-xs text-blue-600">All {users.length} available</div>
-                              {showMusicFestivals && isDateWithinFestival(dateStr) && (
+                              {enabledCalendars.size > 0 && isDateWithinFestival(dateStr) && (
                                 <div className="mt-1 flex items-center">
                                   <Music className="h-3 w-3 mr-1 text-[#28666E]" />
                                   <span className="text-xs text-[#033F63] truncate">
@@ -1932,7 +2948,7 @@ export default function GroupDateFinder() {
                             <div className="flex-1">
                               <div className="font-medium text-sm">{formatDateForDisplay(dateStr)}</div>
                               <div className="text-xs text-purple-600">All {users.length} available</div>
-                              {showMusicFestivals && isDateWithinFestival(dateStr) && (
+                              {enabledCalendars.size > 0 && isDateWithinFestival(dateStr) && (
                                 <div className="mt-1 flex items-center">
                                   <Music className="h-3 w-3 mr-1 text-[#28666E]" />
                                   <span className="text-xs text-[#033F63] truncate">
@@ -1971,14 +2987,14 @@ export default function GroupDateFinder() {
               </div>
 
               {/* Festival Meetups */}
-              {showMusicFestivals && getFestivalMeetups().length > 0 && (
+              {enabledCalendars.size > 0 && getFestivalMeetups().length > 0 && (
                 <div className="p-4 bg-white rounded-lg shadow">
                   <h3 className="font-medium mb-4 flex items-center text-sm sm:text-base">
-                    <Music className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#28666E]" /> Festival Meetup Opportunities
+                    <Music className="mr-2 h-4 w-4 sm:h-5 sm:w-5 text-[#28666E]" /> Event Meetup Opportunities
                   </h3>
                   <div className="bg-green-50 p-4 rounded-lg">
                     <div className="text-sm text-green-700 mb-3">
-                      🎵 Music festivals where friends are actually attending together!
+                      🎵 Events where friends are actually attending together!
                     </div>
                     <div className="space-y-3">
                       {getFestivalMeetups().map((meetup, index) => (
@@ -1994,16 +3010,16 @@ export default function GroupDateFinder() {
                               </div>
                             </div>
                             <div className="flex gap-1">
-                              {meetup.attendees.map(user => (
+                              {meetup.attendees.map((user: User) => (
                                 <div 
                                   key={user.id}
                                   className="w-6 h-6 rounded-full flex items-center justify-center text-xs bg-green-500 text-white"
-                                  title={`${user.name} is attending this festival`}
+                                  title={`${user.name} is attending this event`}
                                 >
                                   🎵
                                 </div>
                               ))}
-                              {users.filter(u => !meetup.attendees.find(a => a.id === u.id)).map(user => (
+                              {users.filter(u => !meetup.attendees.find((a: User) => a.id === u.id)).map(user => (
                                 <div 
                                   key={user.id}
                                   className="w-6 h-6 rounded-full flex items-center justify-center text-xs bg-gray-200 text-gray-500"
@@ -2022,7 +3038,7 @@ export default function GroupDateFinder() {
               )}
 
               {/* Festival Section - Plans and Tickets */}
-              {showMusicFestivals && getCurrentUserFestivals().length > 0 && (
+              {enabledCalendars.size > 0 && getCurrentUserFestivals().length > 0 && (
                 <div className="mt-8">
                   <div className="text-center mb-8">
                     <h2 className="text-2xl font-bold text-[#033F63] mb-2">🎵 Your Festival Experience</h2>
@@ -2057,7 +3073,7 @@ export default function GroupDateFinder() {
                                 <div className="flex items-center gap-2 mt-2 pt-2 border-t border-indigo-100">
                                   <span className="text-xs text-indigo-600 font-medium">Also attending:</span>
                                   <div className="flex gap-1">
-                                    {item.otherAttendees.map((name, nameIndex) => (
+                                    {item.otherAttendees.map((name: string, nameIndex: number) => (
                                       <span 
                                         key={nameIndex}
                                         className="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full"
@@ -2117,7 +3133,7 @@ export default function GroupDateFinder() {
                                 <div className="pt-2 border-t border-white/30">
                                   <div className="text-xs opacity-75 mb-2">FRIENDS ALSO ATTENDING:</div>
                                   <div className="flex flex-wrap gap-1">
-                                    {item.otherAttendees.map((name, nameIndex) => (
+                                    {item.otherAttendees.map((name: string, nameIndex: number) => (
                                       <span 
                                         key={nameIndex}
                                         className="px-2 py-1 text-xs bg-white/20 rounded-full backdrop-blur-sm"
@@ -2204,17 +3220,152 @@ export default function GroupDateFinder() {
       {/* About View */}
       {view === 'about' && <AboutPage />}
 
-      {/* Footer - only show on main views */}
-      {(view === 'calendar' || view === 'results') && (
-        <div className="mt-8 text-center py-4 border-t border-gray-200">
-          <button
-            onClick={() => setView('about')}
-            className="text-sm text-gray-500 hover:text-[#28666E] underline"
-          >
-            What is this?
-          </button>
+
+      {/* Event Calendars - Mobile-First Design */}
+      {view === 'calendar' && customCalendars.length > 0 && (
+        <div className="mb-4 bg-white rounded-lg shadow overflow-hidden">
+          {/* Header - Always Visible */}
+          <div className="p-4 border-b border-gray-100">
+            <div className="flex items-center justify-between">
+              <h3 className="font-medium flex items-center text-base">
+                <Music className="mr-2 h-5 w-5 text-[#033F63]" /> Event Calendars
+              </h3>
+              {enabledCalendars.size > 0 && (
+                <span className="text-xs font-medium text-white bg-[#033F63] px-2 py-1 rounded-full">
+                  {enabledCalendars.size}/{customCalendars.length}
+                </span>
+              )}
+            </div>
+            {enabledCalendars.size === 0 && (
+              <p className="text-sm text-gray-500 mt-1">Tap calendars below to show events</p>
+            )}
+          </div>
+          
+          {/* Calendar Selection - Mobile Optimized */}
+          <div className="p-4">
+            {loadingCalendars ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="text-gray-500">Loading calendars...</div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {customCalendars.map((calendar) => (
+                  <button
+                    key={calendar.name}
+                    onClick={() => toggleCalendar(calendar.name)}
+                    className={`w-full p-4 rounded-xl border-2 transition-all active:scale-95 ${
+                      enabledCalendars.has(calendar.name) 
+                        ? 'border-blue-400 shadow-lg' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    style={{
+                      backgroundColor: enabledCalendars.has(calendar.name) 
+                        ? calendar.color + '15' 
+                        : '#f9fafb'
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div 
+                          className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                            enabledCalendars.has(calendar.name) 
+                              ? 'border-blue-500' 
+                              : 'border-gray-300'
+                          }`}
+                          style={{
+                            backgroundColor: enabledCalendars.has(calendar.name) 
+                              ? calendar.color 
+                              : 'transparent'
+                          }}
+                        >
+                          {enabledCalendars.has(calendar.name) && (
+                            <div className="w-3 h-3 text-white text-xs">✓</div>
+                          )}
+                        </div>
+                        {calendar.icon && (
+                          <span className="text-xl">{calendar.icon}</span>
+                        )}
+                        <div className="text-left">
+                          <div className="font-medium text-gray-800">{calendar.name}</div>
+                          <div className="text-sm text-gray-500">
+                            {calendar.events.length} events
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        {enabledCalendars.has(calendar.name) ? 'ON' : 'OFF'}
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Events Preview - Mobile Optimized */}
+          {enabledCalendars.size > 0 && (
+            <div className="border-t border-gray-100">
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-medium text-gray-800">
+                    Upcoming Events ({getAllEnabledEvents().length})
+                  </h4>
+                  <div className="text-xs text-gray-500">
+                    Tap to jump to month
+                  </div>
+                </div>
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {getAllEnabledEvents()
+                    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+                    .slice(0, 6) // Limit to 6 events on mobile for performance
+                    .map(event => (
+                    <button 
+                      key={event.id}
+                      className={`w-full p-3 rounded-lg border border-gray-200 text-left active:scale-95 transition-all ${event.color}`}
+                      onClick={() => {
+                        const eventDate = new Date(event.startDate + 'T12:00:00');
+                        setCurrentMonth(new Date(eventDate.getFullYear(), eventDate.getMonth(), 1));
+                      }}
+                    >
+                      <div className="font-medium text-sm mb-1">{event.name}</div>
+                      <div className="text-xs text-gray-600">
+                        {new Date(event.startDate + 'T12:00:00').toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric',
+                          year: new Date(event.startDate).getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+                        })} - 
+                        {new Date(event.endDate + 'T12:00:00').toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric',
+                          year: new Date(event.endDate).getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
+                        })}
+                      </div>
+                      {event.location && (
+                        <div className="text-xs text-gray-500 mt-1 truncate">📍 {event.location}</div>
+                      )}
+                    </button>
+                  ))}
+                  {getAllEnabledEvents().length > 6 && (
+                    <div className="text-center py-2 text-xs text-gray-500">
+                      ... and {getAllEnabledEvents().length - 6} more events
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
+
+      {/* Footer - appears at bottom of all views */}
+      <div className="mt-8 text-center py-4 border-t border-gray-200">
+        <button
+          onClick={() => setView('about')}
+          className="text-sm text-gray-500 hover:text-[#28666E] underline"
+        >
+          What is this?
+        </button>
+      </div>
     </div>
   );
 }
