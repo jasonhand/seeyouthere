@@ -21,7 +21,7 @@
 
 ## 🚀 Live Demo
 
-Visit the live application: [See Ya There](https://seeyathere.netlify.app)
+Visit the live application: [See Ya There](https://seeyathere.co)
 
 ## 🛠️ Technology Stack
 
